@@ -5,13 +5,13 @@
   <groupId>com.att.research</groupId>
   <artifactId>grappa</artifactId>
   <name>AT&amp;T Research - Grappa</name>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2-20141205-phenotips</version>
 
   <scm>
     <connection>scm:git:git://github.com/phenotips/grappa.git</connection>
     <developerConnection>scm:git:git@github.com:phenotips/grappa.git</developerConnection>
     <url>https://github.com/phenotips/grappa.git/tree/master/</url>
-    <tag>HEAD</tag>
+    <tag>grappa-1.2-20141205-phenotips</tag>
   </scm>
 
   <distributionManagement>
