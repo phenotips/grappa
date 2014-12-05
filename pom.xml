@@ -7,6 +7,26 @@
   <name>AT&amp;T Research - Grappa</name>
   <version>1.2-SNAPSHOT</version>
 
+  <scm>
+    <connection>scm:git:git://github.com/phenotips/grappa.git</connection>
+    <developerConnection>scm:git:git@github.com:phenotips/grappa.git</developerConnection>
+    <url>https://github.com/phenotips/grappa.git/tree/master/</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>nexus.phenotips.org</id>
+      <name>Maven2 Remote Repository for Releases</name>
+      <url>https://nexus.phenotips.org/nexus/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus.phenotips.org</id>
+      <name>Maven2 Development Repository for Snapshots</name>
+      <url>https://nexus.phenotips.org/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <build>
     <defaultGoal>install</defaultGoal>
     <extensions>
