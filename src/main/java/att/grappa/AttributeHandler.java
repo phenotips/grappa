@@ -10,22 +10,19 @@
 
 package att.grappa;
 
-import java.util.Hashtable;
-
 /**
  * An interface for methods that perform attribute value conversions.
  *
  * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
- * @author  <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @ AT&T Labs</a>
+ * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
+ *         AT&T Labs</a>
  */
 public interface AttributeHandler
 {
     /**
-     * Convert the supplied value to a string. How to convert the value is
-     * based on the type, name and attrtype information supplied. Note: this
-     * method really could be declared static except that it hides the
-     * instance method declared in the AttributeHandler interface and a
-     * class method cannot hide an instance method.
+     * Convert the supplied value to a string. How to convert the value is based on the type, name and attrtype
+     * information supplied. Note: this method really could be declared static except that it hides the instance method
+     * declared in the AttributeHandler interface and a class method cannot hide an instance method.
      *
      * @param elemType the element type to which the named attribute applies
      * @param name the name of the attribute
@@ -36,12 +33,9 @@ public interface AttributeHandler
     public String convertValue(int elemType, String name, Object value, int convType);
 
     /**
-     * Convert the supplied string value to the appropriate Object.
-     * How to convert the value is
-     * based on the type, name and attrtype information supplied. Note: this
-     * method really could be declared static except that it hides the
-     * instance method declared in the AttributeHandler interface and a
-     * class method cannot hide an instance method.
+     * Convert the supplied string value to the appropriate Object. How to convert the value is based on the type, name
+     * and attrtype information supplied. Note: this method really could be declared static except that it hides the
+     * instance method declared in the AttributeHandler interface and a class method cannot hide an instance method.
      *
      * @param elemType the element type to which the named attribute applies
      * @param name the name of the attribute
@@ -52,11 +46,9 @@ public interface AttributeHandler
     public Object convertStringValue(int elemType, String name, String stringValue, int convType);
 
     /**
-     * Make a copy of the supplied value. How to copy the value is
-     * based on the type, name and attrtype information supplied. Note: this
-     * method really could be declared static except that it hides the
-     * instance method declared in the AttributeHandler interface and a
-     * class method cannot hide an instance method.
+     * Make a copy of the supplied value. How to copy the value is based on the type, name and attrtype information
+     * supplied. Note: this method really could be declared static except that it hides the instance method declared in
+     * the AttributeHandler interface and a class method cannot hide an instance method.
      *
      * @param elemType the element type to which the named attribute applies
      * @param name the name of the attribute

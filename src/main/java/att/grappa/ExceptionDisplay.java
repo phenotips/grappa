@@ -9,161 +9,191 @@
  */
 package att.grappa;
 
-import java.io.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Panel;
+import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
- * A class for displaying exception information in a pop-up frame.
- * As a convenience, an instance exists as a static member of
- * the <code>Grappa</code> class.
+ * A class for displaying exception information in a pop-up frame. As a convenience, an instance exists as a static
+ * member of the <code>Grappa</code> class.
  *
  * @see Grappa#displayException(java.lang.Exception)
  * @see Grappa#displayException(java.lang.Exception,java.lang.String)
- *
  * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
- * @author  <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @ AT&T Labs</a>
+ * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
+ *         AT&T Labs</a>
  */
-public class ExceptionDisplay {
+public class ExceptionDisplay
+{
     private String title = null;
-    Exception exception = null;
-    Display display = null;
 
+    Exception exception = null;
+
+    Display display = null;
 
     /**
      * Creates an instance of the class for displaying exceptions.
      *
      * @param title the title for the pop-up frame
      */
-    public ExceptionDisplay(String title) {
-	this.title = title;
+    public ExceptionDisplay(String title)
+    {
+        this.title = title;
     }
 
     /**
-     * Pops up the frame and displays information on the supplied exception.
-     * Initially, a text area displays the message associated with the exception.
-     * By pressing a button, an end-user can view a stack trace as well.
+     * Pops up the frame and displays information on the supplied exception. Initially, a text area displays the message
+     * associated with the exception. By pressing a button, an end-user can view a stack trace as well.
      *
      * @param ex the exception about which informtaion is to be displayed.
      */
-    public void displayException(Exception ex) {
-	displayException(ex,null);
+    public void displayException(Exception ex)
+    {
+        displayException(ex, null);
     }
 
     /**
-     * Pops up the frame and displays information on the supplied exception.
-     * Initially, a text area displays the supplied string followed on the
-     * next line by the message associated with the exception.
-     * By pressing a button, an end-user can view a stack trace as well.
+     * Pops up the frame and displays information on the supplied exception. Initially, a text area displays the
+     * supplied string followed on the next line by the message associated with the exception. By pressing a button, an
+     * end-user can view a stack trace as well.
      *
      * @param ex the exception about which informtaion is to be displayed.
      */
-    public void displayException(Exception ex, String msg) {
-	if(display == null) display = new Display(title);
-	exception = ex;
-	if(ex == null && msg == null) {
-	    return;
-	}
-	if(msg != null) {
-	    if(ex == null) {
-		display.setText(msg);
-	    } else {
-		display.setText(msg + Grappa.NEW_LINE + ex.getMessage());
-	    }
-	} else {
-	    display.setText(ex.getMessage());
-	}
-	display.setVisible(true);
+    public void displayException(Exception ex, String msg)
+    {
+        if (this.display == null) {
+            this.display = new Display(this.title);
+        }
+        this.exception = ex;
+        if (ex == null && msg == null) {
+            return;
+        }
+        if (msg != null) {
+            if (ex == null) {
+                this.display.setText(msg);
+            } else {
+                this.display.setText(msg + GrappaConstants.NEW_LINE + ex.getMessage());
+            }
+        } else {
+            this.display.setText(ex.getMessage());
+        }
+        this.display.setVisible(true);
     }
 
     // TODO: re-do this using JFrame (not a big deal)
-    class Display extends Frame {
-	private TextArea textarea = null;
-	private Panel buttonPanel = null;
-	private Button trace = null;
-	private Button dismiss = null;
-	private WindowObserver observer = null;
+    class Display extends Frame
+    {
+        private TextArea textarea = null;
 
-	Display(String title) {
-	    super(title);
+        private Panel buttonPanel = null;
 
-	    observer = new WindowObserver();
+        private Button trace = null;
 
-	    GridBagLayout gbl = new GridBagLayout();
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(4,4,4,4);
-	    gbc.weightx = 1;
-	    gbc.weighty = 1;
-	    gbc.gridwidth = GridBagConstraints.REMAINDER;
-	    setLayout(gbl);
+        private Button dismiss = null;
 
-	    textarea = new TextArea("",7,80);
-	    textarea.setEditable(false);
+        private WindowObserver observer = null;
 
-	    buttonPanel = new Panel();
-	    buttonPanel.setLayout(new BorderLayout());
+        Display(String title)
+        {
+            super(title);
 
-	    trace = new Button("Stack Trace");
-	    trace.addActionListener(observer);
-	    dismiss = new Button("Dismiss");
-	    dismiss.addActionListener(observer);
+            this.observer = new WindowObserver();
 
-	    buttonPanel.add("West",trace);
-	    buttonPanel.add("East",dismiss);
+            GridBagLayout gbl = new GridBagLayout();
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(4, 4, 4, 4);
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            setLayout(gbl);
 
-	    gbc.fill = GridBagConstraints.BOTH;
-	    gbl.setConstraints(textarea,gbc);
-	    add(textarea);
-	    gbc.weighty = 0;
-	    gbc.fill = GridBagConstraints.HORIZONTAL;
-	    gbl.setConstraints(buttonPanel,gbc);
-	    add(buttonPanel);
+            this.textarea = new TextArea("", 7, 80);
+            this.textarea.setEditable(false);
 
-	    addWindowListener(observer);
-	    pack();
-	}
+            this.buttonPanel = new Panel();
+            this.buttonPanel.setLayout(new BorderLayout());
 
-	void setText(String text) {
-	    if(text == null) text = "No message to display, try stack trace.";
-	    textarea.setText(text);
-	}
+            this.trace = new Button("Stack Trace");
+            this.trace.addActionListener(this.observer);
+            this.dismiss = new Button("Dismiss");
+            this.dismiss.addActionListener(this.observer);
 
-	Exception getException() {
-	    return exception;
-	}
+            this.buttonPanel.add("West", this.trace);
+            this.buttonPanel.add("East", this.dismiss);
 
-	class WindowObserver extends WindowAdapter implements ActionListener {
+            gbc.fill = GridBagConstraints.BOTH;
+            gbl.setConstraints(this.textarea, gbc);
+            add(this.textarea);
+            gbc.weighty = 0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbl.setConstraints(this.buttonPanel, gbc);
+            add(this.buttonPanel);
 
-	    public void windowClosing(WindowEvent evt) {
-		dismiss();
-	    }
+            addWindowListener(this.observer);
+            pack();
+        }
 
-	    private void dismiss() {
-		setVisible(false);
-		dispose();
-		display = null;
-	    }
+        void setText(String text)
+        {
+            if (text == null) {
+                text = "No message to display, try stack trace.";
+            }
+            this.textarea.setText(text);
+        }
 
-	    public void actionPerformed(ActionEvent evt) {
-		Object src = evt.getSource();
-		if(src instanceof Button) {
-		    Button btn = (Button)src;
-		    if(btn.getLabel().equals("Dismiss")) {
-			setVisible(false);
-		    } else if(btn.getLabel().equals("Stack Trace")) {
-			if(getException() == null) {
-			    setText("No stack trace available (exception is null).");
-			} else {
-			    StringWriter swriter = new StringWriter();
-			    PrintWriter pwriter = new PrintWriter(swriter);
-			    getException().printStackTrace(pwriter);
-			    pwriter.flush();
-			    setText(swriter.toString());
-			    pwriter.close();
-			}
-		    }
-		}
-	    }
-	}
+        Exception getException()
+        {
+            return ExceptionDisplay.this.exception;
+        }
+
+        class WindowObserver extends WindowAdapter implements ActionListener
+        {
+
+            @Override
+            public void windowClosing(WindowEvent evt)
+            {
+                dismiss();
+            }
+
+            private void dismiss()
+            {
+                setVisible(false);
+                dispose();
+                ExceptionDisplay.this.display = null;
+            }
+
+            public void actionPerformed(ActionEvent evt)
+            {
+                Object src = evt.getSource();
+                if (src instanceof Button) {
+                    Button btn = (Button) src;
+                    if (btn.getLabel().equals("Dismiss")) {
+                        setVisible(false);
+                    } else if (btn.getLabel().equals("Stack Trace")) {
+                        if (getException() == null) {
+                            setText("No stack trace available (exception is null).");
+                        } else {
+                            StringWriter swriter = new StringWriter();
+                            PrintWriter pwriter = new PrintWriter(swriter);
+                            getException().printStackTrace(pwriter);
+                            pwriter.flush();
+                            setText(swriter.toString());
+                            pwriter.close();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

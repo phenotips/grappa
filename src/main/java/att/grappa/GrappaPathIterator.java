@@ -10,131 +10,140 @@
 
 package att.grappa;
 
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
 
 /**
  * This class provides a PathIterator for GrappaNexus shapes.
  *
  * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
- * @author  <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @ AT&T Labs</a>
+ * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
+ *         AT&T Labs</a>
  */
 public class GrappaPathIterator implements PathIterator
 {
     GrappaNexus grappaNexus;
+
     AffineTransform affine;
+
     PathIterator shapeIterator = null;
+
     PathIterator areaIterator = null;
+
     double[] pts = new double[6];
+
     int type;
 
-    ////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////
     //
     // Constructors
     //
-    ////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////
 
     /**
      * Constructs a new <code>GrappaPathIterator</code> given a GrappaNexus.
      */
-    public GrappaPathIterator(GrappaNexus shape) {
-	this(shape, null);
+    public GrappaPathIterator(GrappaNexus shape)
+    {
+        this(shape, null);
     }
 
     /**
-     * Constructs a new <code>GrappaPathIterator</code> given a GrappaNexus
-     * and an optional AffineTransform.
+     * Constructs a new <code>GrappaPathIterator</code> given a GrappaNexus and an optional AffineTransform.
      */
-    public GrappaPathIterator(GrappaNexus shape, AffineTransform at) {
-	if(shape == null) {
-	    throw new IllegalArgumentException("shape cannot be null");
-	}
-	this.grappaNexus = shape;
-	this.affine = at;
-	if(shape.shape != null) {
-	    shapeIterator = shape.shape.getPathIterator(this.affine);
-	    if(shapeIterator.isDone()) {
-		shapeIterator = null;
-	    }
-	}
-	if(shape.textArea != null && (Grappa.shapeClearText || shape.clearText)) {
-	    areaIterator = shape.textArea.getPathIterator(this.affine);
-	    if(areaIterator.isDone()) {
-		areaIterator = null;
-	    }
-	}
-	if(shapeIterator != null) {
-	    type = shapeIterator.currentSegment(pts);
-	} else if(areaIterator != null) {
-	    type = areaIterator.currentSegment(pts);
-	} else {
-	    throw new RuntimeException("cannot initialize; nothing to iterate over");
-	}
+    public GrappaPathIterator(GrappaNexus shape, AffineTransform at)
+    {
+        if (shape == null) {
+            throw new IllegalArgumentException("shape cannot be null");
+        }
+        this.grappaNexus = shape;
+        this.affine = at;
+        if (shape.shape != null) {
+            this.shapeIterator = shape.shape.getPathIterator(this.affine);
+            if (this.shapeIterator.isDone()) {
+                this.shapeIterator = null;
+            }
+        }
+        if (shape.textArea != null && (Grappa.shapeClearText || shape.clearText)) {
+            this.areaIterator = shape.textArea.getPathIterator(this.affine);
+            if (this.areaIterator.isDone()) {
+                this.areaIterator = null;
+            }
+        }
+        if (this.shapeIterator != null) {
+            this.type = this.shapeIterator.currentSegment(this.pts);
+        } else if (this.areaIterator != null) {
+            this.type = this.areaIterator.currentSegment(this.pts);
+        } else {
+            throw new RuntimeException("cannot initialize; nothing to iterate over");
+        }
     }
 
-    ////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////
     //
     // PathIterator interface
     //
-    ////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////
 
-    public int currentSegment(double[] coords) {
-	System.arraycopy(pts, 0, coords, 0, 6);
-	return(type);
+    public int currentSegment(double[] coords)
+    {
+        System.arraycopy(this.pts, 0, coords, 0, 6);
+        return (this.type);
     }
 
-    public int currentSegment(float[] coords) {
-	coords[0] = (float)pts[0];
-	coords[1] = (float)pts[1];
-	coords[2] = (float)pts[2];
-	coords[3] = (float)pts[3];
-	coords[4] = (float)pts[4];
-	coords[5] = (float)pts[5];
-	return(type);
+    public int currentSegment(float[] coords)
+    {
+        coords[0] = (float) this.pts[0];
+        coords[1] = (float) this.pts[1];
+        coords[2] = (float) this.pts[2];
+        coords[3] = (float) this.pts[3];
+        coords[4] = (float) this.pts[4];
+        coords[5] = (float) this.pts[5];
+        return (this.type);
     }
 
     /**
      * Return the winding rule for determining the interior of the path.
      */
-    public int getWindingRule() {
-	return(grappaNexus.getWindingRule());
+    public int getWindingRule()
+    {
+        return (this.grappaNexus.getWindingRule());
     }
 
-    public boolean isDone() {
-	return(
-	       (shapeIterator == null || shapeIterator.isDone())
-	       &&
-	       (areaIterator == null || areaIterator.isDone())
-	       );
+    public boolean isDone()
+    {
+        return ((this.shapeIterator == null || this.shapeIterator.isDone())
+        && (this.areaIterator == null || this.areaIterator.isDone()));
     }
 
-    public void next() {
-	if(shapeIterator != null) {
-	    if(shapeIterator.isDone()) {
-		shapeIterator = null;
-	    } else {
-		shapeIterator.next();
-		if(shapeIterator.isDone()) {
-		    shapeIterator = null;
-		} else {
-		    type = shapeIterator.currentSegment(pts);
-		}
-		return;
-	    }
-	}
-	if(areaIterator != null) {
-	    if(areaIterator.isDone()) {
-		areaIterator = null;
-	    } else {
-		areaIterator.next();
-		if(areaIterator.isDone()) {
-		    areaIterator = null;
-		} else {
-		    type = areaIterator.currentSegment(pts);
-		}
-		return;
-	    }
-	}
+    public void next()
+    {
+        if (this.shapeIterator != null) {
+            if (this.shapeIterator.isDone()) {
+                this.shapeIterator = null;
+            } else {
+                this.shapeIterator.next();
+                if (this.shapeIterator.isDone()) {
+                    this.shapeIterator = null;
+                } else {
+                    this.type = this.shapeIterator.currentSegment(this.pts);
+                }
+                return;
+            }
+        }
+        if (this.areaIterator != null) {
+            if (this.areaIterator.isDone()) {
+                this.areaIterator = null;
+            } else {
+                this.areaIterator.next();
+                if (this.areaIterator.isDone()) {
+                    this.areaIterator = null;
+                } else {
+                    this.type = this.areaIterator.currentSegment(this.pts);
+                }
+                return;
+            }
+        }
     }
 
 }
