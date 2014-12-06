@@ -543,7 +543,7 @@ public abstract class Element
     /**
      * Gets an enumeration of the keys for this Element's local attributes.
      *
-     * @return an Enumneration of String objects
+     * @return an Enumeration of String objects
      */
 
     public Enumeration getLocalAttributeKeys()
@@ -557,7 +557,7 @@ public abstract class Element
     /**
      * Get an Enumeration of the Attribute objects for this Element.
      *
-     * @return an Enumneration of the (local) Attribute objects.
+     * @return an Enumeration of the (local) Attribute objects.
      */
     public Enumeration getLocalAttributePairs()
     {
