@@ -11,6 +11,7 @@
 package att.grappa;
 
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -453,7 +454,7 @@ public class Edge extends Element
     public static Enumeration findEdgesByEnds(Node node1, Node node2)
     {
         if (node1 == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return new Enumerator(node1, node2);
     }

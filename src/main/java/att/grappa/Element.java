@@ -11,6 +11,7 @@
 package att.grappa;
 
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -337,7 +338,7 @@ public abstract class Element
     public Enumeration listAttrsOfInterest()
     {
         if (this.attrsOfInterest == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return this.attrsOfInterest.elements();
     }
@@ -548,7 +549,7 @@ public abstract class Element
     public Enumeration getLocalAttributeKeys()
     {
         if (this.attributes == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return (this.attributes.keys());
     }
@@ -561,7 +562,7 @@ public abstract class Element
     public Enumeration getLocalAttributePairs()
     {
         if (this.attributes == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return (this.attributes.elements());
     }

@@ -12,6 +12,7 @@ package att.grappa;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -280,7 +281,7 @@ public class Subgraph extends Element
     public Enumeration getNodeAttributeKeys()
     {
         if (this.nodeAttributes == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return (this.nodeAttributes.keys());
     }
@@ -293,7 +294,7 @@ public class Subgraph extends Element
     public Enumeration getNodeAttributePairs()
     {
         if (this.nodeAttributes == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return (this.nodeAttributes.elements());
     }
@@ -733,7 +734,7 @@ public class Subgraph extends Element
     public Enumeration getEdgeAttributeKeys()
     {
         if (this.edgeAttributes == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return (this.edgeAttributes.keys());
     }
@@ -746,7 +747,7 @@ public class Subgraph extends Element
     public Enumeration getEdgeAttributePairs()
     {
         if (this.edgeAttributes == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return (this.edgeAttributes.elements());
     }
@@ -2296,7 +2297,7 @@ public class Subgraph extends Element
     public Enumeration nodeElements()
     {
         if (this.nodedict == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return this.nodedict.elements();
     }
@@ -2309,7 +2310,7 @@ public class Subgraph extends Element
     public Enumeration edgeElements()
     {
         if (this.edgedict == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return this.edgedict.elements();
     }
@@ -2322,7 +2323,7 @@ public class Subgraph extends Element
     public Enumeration subgraphElements()
     {
         if (this.graphdict == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return this.graphdict.elements();
     }

@@ -428,7 +428,7 @@ public class Graph extends Subgraph
     public Enumeration getGrappaAttributeKeys()
     {
         if (this.grattributes == null) {
-            return Grappa.emptyEnumeration.elements();
+            return Collections.emptyEnumeration();
         }
         return this.grattributes.keys();
     }

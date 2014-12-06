@@ -145,13 +145,6 @@ public abstract class Grappa
         }
     }
 
-    /**
-     * A convenience Vector useful when an enumeration is to be returned, but the object to be enumerated is null (in
-     * which case, the return value can be <I>Grappa.emptyEnumeration.elements()</I>, whose <I>hasMoreElements()</I>
-     * method will return <B>false</B>).
-     */
-    public static final java.util.Vector emptyEnumeration = new java.util.Vector(0, 0);
-
     /*
      * Default tool-tip text when cursor is outside graph, but inside the display panel.
      */
