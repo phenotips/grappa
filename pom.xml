@@ -87,8 +87,8 @@
           <!-- Lock down plugin version for build reproducibility -->
           <version>3.2</version>
           <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.7</source>
+            <target>1.7</target>
             <!-- Show compiler warnings -->
             <compilerArgument>-Xlint:all</compilerArgument>
             <showWarnings>true</showWarnings>
