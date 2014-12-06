@@ -985,7 +985,7 @@ public abstract class Element
             return ("\"\"");
         }
 
-        StringBuffer strbuf = new StringBuffer(len + 8);
+        StringBuilder strbuf = new StringBuilder(len + 8);
         char[] array = input.toCharArray();
         char ch;
         boolean has_special = false;

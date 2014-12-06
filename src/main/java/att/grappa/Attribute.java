@@ -426,7 +426,7 @@ public final class Attribute extends java.util.Observable
                 break;
             case HASHLIST_TYPE:
                 if (value instanceof Hashtable) {
-                    StringBuffer strbuf = new StringBuffer();
+                    StringBuilder strbuf = new StringBuilder();
                     Enumeration keys = ((Hashtable) value).keys();
                     synchronized (strbuf) {
                         while (keys.hasMoreElements()) {

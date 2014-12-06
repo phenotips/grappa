@@ -621,31 +621,31 @@ public class GrappaStyle
         )
     {
 
-        StringBuffer strokeStringBuffer = new StringBuffer();
+        StringBuilder strokeStringBuilder = new StringBuilder();
 
-        strokeStringBuffer.append(lineWidth);
-        strokeStringBuffer.append(",");
-        strokeStringBuffer.append(capType);
-        strokeStringBuffer.append(",");
-        strokeStringBuffer.append(joinType);
-        strokeStringBuffer.append(",");
-        strokeStringBuffer.append(miterLimit);
-        strokeStringBuffer.append(",");
+        strokeStringBuilder.append(lineWidth);
+        strokeStringBuilder.append(",");
+        strokeStringBuilder.append(capType);
+        strokeStringBuilder.append(",");
+        strokeStringBuilder.append(joinType);
+        strokeStringBuilder.append(",");
+        strokeStringBuilder.append(miterLimit);
+        strokeStringBuilder.append(",");
         if (dashSpec == null) {
-            strokeStringBuffer.append("null");
+            strokeStringBuilder.append("null");
         } else {
-            strokeStringBuffer.append("{");
-            strokeStringBuffer.append(dashSpec[0]);
+            strokeStringBuilder.append("{");
+            strokeStringBuilder.append(dashSpec[0]);
             for (int i = 1; i < dashSpec.length; i++) {
-                strokeStringBuffer.append(",");
-                strokeStringBuffer.append(dashSpec[i]);
+                strokeStringBuilder.append(",");
+                strokeStringBuilder.append(dashSpec[i]);
             }
-            strokeStringBuffer.append("}");
+            strokeStringBuilder.append("}");
         }
-        strokeStringBuffer.append(",");
-        strokeStringBuffer.append(dashPhase);
+        strokeStringBuilder.append(",");
+        strokeStringBuilder.append(dashPhase);
 
-        return (strokeStringBuffer.toString());
+        return (strokeStringBuilder.toString());
     }
 
     /**
@@ -694,7 +694,7 @@ public class GrappaStyle
         int type
         )
     {
-        StringBuffer styleStringBuffer = null;
+        StringBuilder styleStringBuilder = null;
         String tmpstr = null;
         Object[] args = { "%g", null };
 
@@ -707,60 +707,60 @@ public class GrappaStyle
                 &&
             !STYLE_LINE_COLOR_DEFAULT.equals(color)
             )) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
-            styleStringBuffer.append("lineColor(");
+            styleStringBuilder.append("lineColor(");
             if ((tmpstr = GrappaColor.getColorName(color)) == null) {
                 float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-                // styleStringBuffer.append(hsb[0]);
-                // styleStringBuffer.append(',');
-                // styleStringBuffer.append(hsb[1]);
-                // styleStringBuffer.append(',');
-                // styleStringBuffer.append(hsb[2]);
-                styleStringBuffer.append(GrappaSupportPrintf.sprintf(new Object[] { "%g,%g,%g", new Float(hsb[0]),
+                // styleStringBuilder.append(hsb[0]);
+                // styleStringBuilder.append(',');
+                // styleStringBuilder.append(hsb[1]);
+                // styleStringBuilder.append(',');
+                // styleStringBuilder.append(hsb[2]);
+                styleStringBuilder.append(GrappaSupportPrintf.sprintf(new Object[] { "%g,%g,%g", new Float(hsb[0]),
                 new Float(hsb[1]), new Float(hsb[2]) }));
             } else {
-                styleStringBuffer.append(tmpstr);
+                styleStringBuilder.append(tmpstr);
             }
-            styleStringBuffer.append(')');
+            styleStringBuilder.append(')');
         }
 
         if (showAll
             ||
             lineStyle != STYLE_LINE_STYLE_DEFAULT) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             switch (lineStyle) {
                 case STYLE_SOLID:
-                    styleStringBuffer.append("solid");
+                    styleStringBuilder.append("solid");
                     break;
                 case STYLE_DASHED:
-                    styleStringBuffer.append("dashed");
+                    styleStringBuilder.append("dashed");
                     break;
                 case STYLE_DOTTED:
-                    styleStringBuffer.append("dotted");
+                    styleStringBuilder.append("dotted");
                     break;
                 case STYLE_DASH:
                     if (dashSpec == null) {
-                        styleStringBuffer.append("solid");
+                        styleStringBuilder.append("solid");
                     } else {
-                        styleStringBuffer.append("dash(");
-                        // styleStringBuffer.append(dashSpec[0]);
+                        styleStringBuilder.append("dash(");
+                        // styleStringBuilder.append(dashSpec[0]);
                         args[1] = new Float(dashSpec[0]);
-                        styleStringBuffer.append(GrappaSupportPrintf.sprintf(args));
+                        styleStringBuilder.append(GrappaSupportPrintf.sprintf(args));
                         for (int i = 1; i < dashSpec.length; i++) {
-                            styleStringBuffer.append(',');
-                            // styleStringBuffer.append(dashSpec[i]);
+                            styleStringBuilder.append(',');
+                            // styleStringBuilder.append(dashSpec[i]);
                             args[1] = new Float(dashSpec[i]);
-                            styleStringBuffer.append(GrappaSupportPrintf.sprintf(args));
+                            styleStringBuilder.append(GrappaSupportPrintf.sprintf(args));
                         }
-                        styleStringBuffer.append(')');
+                        styleStringBuilder.append(')');
                     }
                     break;
                 default:
@@ -771,35 +771,35 @@ public class GrappaStyle
         if (showAll
             ||
             lineWidth != STYLE_LINE_WIDTH_DEFAULT) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
-            styleStringBuffer.append("lineWidth(");
-            // styleStringBuffer.append(lineWidth);
+            styleStringBuilder.append("lineWidth(");
+            // styleStringBuilder.append(lineWidth);
             args[1] = new Float(lineWidth);
-            styleStringBuffer.append(GrappaSupportPrintf.sprintf(args));
-            styleStringBuffer.append(')');
+            styleStringBuilder.append(GrappaSupportPrintf.sprintf(args));
+            styleStringBuilder.append(')');
         }
 
         if (showAll
             ||
             capType != STYLE_CAP_DEFAULT) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             switch (capType) {
                 case BasicStroke.CAP_BUTT:
-                    styleStringBuffer.append("capButt");
+                    styleStringBuilder.append("capButt");
                     break;
                 case BasicStroke.CAP_ROUND:
-                    styleStringBuffer.append("capRound");
+                    styleStringBuilder.append("capRound");
                     break;
                 case BasicStroke.CAP_SQUARE:
-                    styleStringBuffer.append("capSquare");
+                    styleStringBuilder.append("capSquare");
                     break;
                 default:
                     throw new InternalError("unexpected cap type (" + capType + ")");
@@ -809,20 +809,20 @@ public class GrappaStyle
         if (showAll
             ||
             joinType != STYLE_JOIN_DEFAULT) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             switch (joinType) {
                 case BasicStroke.JOIN_BEVEL:
-                    styleStringBuffer.append("joinBevel");
+                    styleStringBuilder.append("joinBevel");
                     break;
                 case BasicStroke.JOIN_MITER:
-                    styleStringBuffer.append("joinMiter");
+                    styleStringBuilder.append("joinMiter");
                     break;
                 case BasicStroke.JOIN_ROUND:
-                    styleStringBuffer.append("joinRound");
+                    styleStringBuilder.append("joinRound");
                     break;
                 default:
                     throw new InternalError("unexpected join type (" + joinType + ")");
@@ -832,31 +832,31 @@ public class GrappaStyle
         if (showAll
             ||
             miterLimit != STYLE_MITER_LIMIT_DEFAULT) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
-            styleStringBuffer.append("miterLimit(");
-            // styleStringBuffer.append(miterLimit);
+            styleStringBuilder.append("miterLimit(");
+            // styleStringBuilder.append(miterLimit);
             args[1] = new Float(miterLimit);
-            styleStringBuffer.append(GrappaSupportPrintf.sprintf(args));
-            styleStringBuffer.append(')');
+            styleStringBuilder.append(GrappaSupportPrintf.sprintf(args));
+            styleStringBuilder.append(')');
         }
 
         if (showAll
             ||
             dashPhase != STYLE_DASH_PHASE_DEFAULT) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
-            styleStringBuffer.append("dashPhase(");
-            // styleStringBuffer.append(dashPhase);
+            styleStringBuilder.append("dashPhase(");
+            // styleStringBuilder.append(dashPhase);
             args[1] = new Float(dashPhase);
-            styleStringBuffer.append(GrappaSupportPrintf.sprintf(args));
-            styleStringBuffer.append(')');
+            styleStringBuilder.append(GrappaSupportPrintf.sprintf(args));
+            styleStringBuilder.append(')');
         }
 
         if ((
@@ -870,15 +870,15 @@ public class GrappaStyle
             ||
             roundedFlag != STYLE_ROUNDED_DEFAULT
             )) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             if (roundedFlag) {
-                styleStringBuffer.append("rounded");
+                styleStringBuilder.append("rounded");
             } else {
-                styleStringBuffer.append("rounded(false)");
+                styleStringBuilder.append("rounded(false)");
             }
         }
 
@@ -893,15 +893,15 @@ public class GrappaStyle
             ||
             diagonalsFlag != STYLE_DIAGONALS_DEFAULT
             )) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             if (diagonalsFlag) {
-                styleStringBuffer.append("diagonals");
+                styleStringBuilder.append("diagonals");
             } else {
-                styleStringBuffer.append("diagonals(false)");
+                styleStringBuilder.append("diagonals(false)");
             }
         }
 
@@ -916,15 +916,15 @@ public class GrappaStyle
             ||
             filledFlag != STYLE_FILLED_DEFAULT
             )) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             if (filledFlag) {
-                styleStringBuffer.append("filled");
+                styleStringBuilder.append("filled");
             } else {
-                styleStringBuffer.append("filled(false)");
+                styleStringBuilder.append("filled(false)");
             }
         }
 
@@ -939,52 +939,52 @@ public class GrappaStyle
             ||
             invisFlag != STYLE_INVIS_DEFAULT
             )) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             if (invisFlag) {
-                styleStringBuffer.append("invis");
+                styleStringBuilder.append("invis");
             } else {
-                styleStringBuffer.append("invis(false)");
+                styleStringBuilder.append("invis(false)");
             }
         }
 
         if (showAll
             ||
             fixedSizeFlag != STYLE_FIXED_SIZE_DEFAULT) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             if (fixedSizeFlag) {
-                styleStringBuffer.append("fixedSize");
+                styleStringBuilder.append("fixedSize");
             } else {
-                styleStringBuffer.append("fixedSize(false)");
+                styleStringBuilder.append("fixedSize(false)");
             }
         }
 
         if (fontStyle != null) {
-            if (styleStringBuffer == null) {
-                styleStringBuffer = new StringBuffer();
+            if (styleStringBuilder == null) {
+                styleStringBuilder = new StringBuilder();
             } else {
-                styleStringBuffer.append(',');
+                styleStringBuilder.append(',');
             }
             if (fontStyle.intValue() == Font.BOLD) {
-                styleStringBuffer.append("bold");
+                styleStringBuilder.append("bold");
             } else if (fontStyle.intValue() == Font.ITALIC) {
-                styleStringBuffer.append("italic");
+                styleStringBuilder.append("italic");
             } else {
-                styleStringBuffer.append("plain");
+                styleStringBuilder.append("plain");
             }
         }
 
-        if (styleStringBuffer == null) {
+        if (styleStringBuilder == null) {
             tmpstr = ""; // or set it null?
         } else {
-            tmpstr = styleStringBuffer.toString();
+            tmpstr = styleStringBuilder.toString();
         }
 
         return (tmpstr);

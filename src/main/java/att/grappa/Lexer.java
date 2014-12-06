@@ -87,9 +87,9 @@ public class Lexer
     private PrintWriter errWriter = null;
 
     /**
-     * common StringBuffer (suggested by Ginny Travers (bbn.com))
+     * common StringBuilder (suggested by Ginny Travers (bbn.com))
      */
-    private StringBuffer cmnstrbuf = new StringBuffer();
+    private StringBuilder cmnstrbuf = new StringBuilder();
 
     /**
      * Create an instance of <code>Lexer</code> that reads from <code>input</code> and sends error messages to

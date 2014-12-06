@@ -45,7 +45,7 @@ public class Graph extends Subgraph
     public boolean filterMode = false;
 
     // used with getIndent, incrementIndent and decrementIndent
-    private StringBuffer indent = null;
+    private StringBuilder indent = null;
 
     // used for error message (when set by setErrorWriter)
     private PrintWriter errWriter = null;
@@ -719,7 +719,7 @@ public class Graph extends Subgraph
     public String getIndent()
     {
         if (this.indent == null) {
-            this.indent = new StringBuffer(5 * INDENT_STRING.length());
+            this.indent = new StringBuilder(5 * INDENT_STRING.length());
         }
         return (this.indent.toString());
     }
@@ -732,7 +732,7 @@ public class Graph extends Subgraph
     public void incrementIndent()
     {
         if (this.indent == null) {
-            this.indent = new StringBuffer(5 * INDENT_STRING.length());
+            this.indent = new StringBuilder(5 * INDENT_STRING.length());
         }
         this.indent.append(INDENT_STRING);
     }

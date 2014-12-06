@@ -93,7 +93,7 @@ public class GrappaSupportRects
 
     private static int fields = 0;
 
-    private static StringBuffer rbuf = null;
+    private static StringBuilder rbuf = null;
 
     // assumes shape type is RECORD_SHAPE or MRECORD_SHAPE
     protected static synchronized Object[] parseRecordInfo(Node node)
@@ -166,7 +166,7 @@ public class GrappaSupportRects
         if (fc == 0) {
             Rectangle rect = tf.getBounds();
             if (rbuf == null) {
-                rbuf = new StringBuffer();
+                rbuf = new StringBuilder();
             } else {
                 rbuf.append(' ');
             }
@@ -223,9 +223,9 @@ public class GrappaSupportRects
             rv.setParent(null);
         }
 
-        StringBuffer textBuf, portBuf;
-        textBuf = new StringBuffer();
-        portBuf = new StringBuffer();
+        StringBuilder textBuf, portBuf;
+        textBuf = new StringBuilder();
+        portBuf = new StringBuilder();
 
         int mode = 0;
         int fi = 0;
@@ -393,7 +393,7 @@ class TableField
 
     String getIdentifier()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (isLR()) {
             buf.append("LR:");
         } else {

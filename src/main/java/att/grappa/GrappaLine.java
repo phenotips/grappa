@@ -193,7 +193,7 @@ public class GrappaLine
         int ps = 0;
         int pe = this.gpts.length - 1;
         boolean spacer = false;
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if ((this.arrow & HEAD_ARROW_EDGE) != 0) {
             buf.append("s,");
             buf.append(this.gpts[ps++].toFormattedString(pointFormat));
@@ -230,7 +230,7 @@ public class GrappaLine
         int ps = 0;
         int pe = this.gpts.length - 1;
         boolean spacer = false;
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if ((this.arrow & HEAD_ARROW_EDGE) != 0) {
             buf.append("s,");
             buf.append(this.gpts[ps].x);

@@ -801,7 +801,7 @@ public abstract class GrappaSupport
             return false;
         }
         BufferedReader fromFilter = new BufferedReader(new InputStreamReader(fromFilterRaw));
-        StringBuffer newGraph = new StringBuffer(content.length() + 128);
+        StringBuilder newGraph = new StringBuilder(content.length() + 128);
         try {
             String line = null;
             while ((line = fromFilter.readLine()) != null) {
