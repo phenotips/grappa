@@ -32,13 +32,10 @@ public class Node extends Element
     public final static String defaultNamePrefix = "N";
 
     // vector of edges going into the node
-    private Vector inEdges = null;
+    private Vector<Edge> inEdges = null;
 
     // vector of edges going out of the node
-    private Vector outEdges = null;
-
-    // vector of edge ports (not used yet)
-    private Vector Ports = null;
+    private Vector<Edge> outEdges = null;
 
     /**
      * Use this constructor when creating a node within a subgraph.
@@ -176,13 +173,13 @@ public class Node extends Element
 
         if (this.inEdges != null) {
             for (int i = 0; i < this.inEdges.size(); i++) {
-                edge = (Edge) (this.inEdges.elementAt(i));
+                edge = this.inEdges.elementAt(i);
                 edge.canonName = null;
             }
         }
         if (this.outEdges != null) {
             for (int i = 0; i < this.outEdges.size(); i++) {
-                edge = (Edge) (this.outEdges.elementAt(i));
+                edge = this.outEdges.elementAt(i);
                 edge.canonName = null;
             }
         }
@@ -203,14 +200,14 @@ public class Node extends Element
         }
         if (inEdge) {
             if (this.inEdges == null) {
-                this.inEdges = new Vector();
+                this.inEdges = new Vector<>();
             }
             if (!this.inEdges.contains(edge)) {
                 this.inEdges.addElement(edge);
             }
         } else {
             if (this.outEdges == null) {
-                this.outEdges = new Vector();
+                this.outEdges = new Vector<>();
             }
             this.outEdges.addElement(edge);
             if (!this.outEdges.contains(edge)) {
@@ -233,7 +230,7 @@ public class Node extends Element
         }
         Edge edge = null;
         for (int i = 0; i < this.outEdges.size(); i++) {
-            edge = (Edge) (this.outEdges.elementAt(i));
+            edge = this.outEdges.elementAt(i);
             if (head == edge.getHead() && key.equals(edge.getKey())) {
                 return edge;
             }
@@ -255,7 +252,7 @@ public class Node extends Element
         }
         Edge edge = null;
         for (int i = 0; i < this.inEdges.size(); i++) {
-            edge = (Edge) (this.inEdges.elementAt(i));
+            edge = this.inEdges.elementAt(i);
             if (tail == edge.getTail() && key.equals(edge.getKey())) {
                 return edge;
             }
@@ -363,9 +360,9 @@ public class Node extends Element
      *
      * @return an Enumeration of all the edges (in or out) associated with this node.
      */
-    public Enumeration edgeElements()
+    public Enumeration<Edge> edgeElements()
     {
-        return new Enumerator(this.inEdges, this.outEdges);
+        return new Enumerator<>(this.inEdges, this.outEdges);
     }
 
     /**
@@ -373,9 +370,9 @@ public class Node extends Element
      *
      * @return an Enumeration of all the inbound edges associated with this node.
      */
-    public Enumeration inEdgeElements()
+    public Enumeration<Edge> inEdgeElements()
     {
-        return new Enumerator(this.inEdges, null);
+        return new Enumerator<>(this.inEdges, null);
     }
 
     /**
@@ -383,22 +380,22 @@ public class Node extends Element
      *
      * @return an Enumeration of all the outbound edges associated with this node.
      */
-    public Enumeration outEdgeElements()
+    public Enumeration<Edge> outEdgeElements()
     {
-        return new Enumerator(null, this.outEdges);
+        return new Enumerator<>(null, this.outEdges);
     }
 
-    class Enumerator implements Enumeration
+    class Enumerator<T> implements Enumeration<T>
     {
         int inCnt = 0;
 
         int outCnt = 0;
 
-        Vector inEdges = null;
+        Vector<T> inEdges = null;
 
-        Vector outEdges = null;
+        Vector<T> outEdges = null;
 
-        Enumerator(Vector inEdges, Vector outEdges)
+        Enumerator(Vector<T> inEdges, Vector<T> outEdges)
         {
             this.inCnt = (inEdges == null) ? 0 : inEdges.size();
             this.outCnt = (outEdges == null) ? 0 : outEdges.size();
@@ -406,6 +403,7 @@ public class Node extends Element
             this.outEdges = outEdges;
         }
 
+        @Override
         public boolean hasMoreElements()
         {
             int tmp;
@@ -418,7 +416,8 @@ public class Node extends Element
             return ((this.inCnt + this.outCnt) > 0);
         }
 
-        public Object nextElement()
+        @Override
+        public T nextElement()
         {
             synchronized (Node.this) {
                 int tmp;

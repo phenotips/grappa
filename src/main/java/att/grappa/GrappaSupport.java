@@ -534,7 +534,7 @@ public abstract class GrappaSupport
         if (bb.contains(pt)) {
             elem = subg;
 
-            Enumeration enm;
+            Enumeration<? extends Element> enm;
             Element subelem = null;
 
             enm = subg.subgraphElements();
@@ -657,14 +657,14 @@ public abstract class GrappaSupport
             elem.highlight = 0;
             if (wasDelete) {
                 if (elem.isNode()) {
-                    Enumeration enm = ((Node) elem).edgeElements();
+                    Enumeration<Edge> enm = ((Node) elem).edgeElements();
                     while (enm.hasMoreElements()) {
-                        ((Element) (enm.nextElement())).highlight = 0;
+                        enm.nextElement().highlight = 0;
                     }
                 } else if (elem.isSubgraph()) {
-                    Enumeration enm = ((Subgraph) elem).elements();
+                    Enumeration<Element> enm = ((Subgraph) elem).elements();
                     while (enm.hasMoreElements()) {
-                        ((Element) (enm.nextElement())).highlight = 0;
+                        enm.nextElement().highlight = 0;
                     }
                 }
             }
@@ -681,26 +681,26 @@ public abstract class GrappaSupport
             if ((mode & DELETION_MASK) == DELETION_MASK) {
                 if (elem.isNode()) {
                     if ((elem.highlight & DELETION_MASK) == DELETION_MASK) {
-                        Enumeration enm = ((Node) elem).edgeElements();
+                        Enumeration<Edge> enm = ((Node) elem).edgeElements();
                         while (enm.hasMoreElements()) {
-                            ((Element) (enm.nextElement())).highlight |= DELETION_MASK;
+                            enm.nextElement().highlight |= DELETION_MASK;
                         }
                     } else {
-                        Enumeration enm = ((Node) elem).edgeElements();
+                        Enumeration<Edge> enm = ((Node) elem).edgeElements();
                         while (enm.hasMoreElements()) {
-                            ((Element) (enm.nextElement())).highlight &= ~DELETION_MASK;
+                            enm.nextElement().highlight &= ~DELETION_MASK;
                         }
                     }
                 } else if (elem.isSubgraph()) {
                     if ((elem.highlight & DELETION_MASK) == DELETION_MASK) {
-                        Enumeration enm = ((Subgraph) elem).elements();
+                        Enumeration<Element> enm = ((Subgraph) elem).elements();
                         while (enm.hasMoreElements()) {
-                            ((Element) (enm.nextElement())).highlight |= DELETION_MASK;
+                            enm.nextElement().highlight |= DELETION_MASK;
                         }
                     } else {
-                        Enumeration enm = ((Subgraph) elem).elements();
+                        Enumeration<Element> enm = ((Subgraph) elem).elements();
                         while (enm.hasMoreElements()) {
-                            ((Element) (enm.nextElement())).highlight &= ~DELETION_MASK;
+                            enm.nextElement().highlight &= ~DELETION_MASK;
                         }
                     }
                 }

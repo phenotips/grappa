@@ -16,7 +16,7 @@ package att.grappa;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public interface GraphEnumeration extends java.util.Enumeration
+public interface GraphEnumeration extends java.util.Enumeration<Element>
 {
     /**
      * Get the root of this enumeration.

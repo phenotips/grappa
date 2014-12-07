@@ -138,7 +138,7 @@ public class Edge extends Element
                 throw new RuntimeException("cannot create self-looping edge in a strict graph (" + tail.getName()
                     + (directed ? "->" : "--") + head.getName() + ")");
             } else {
-                Enumeration enm = Edge.findEdgesByEnds(tail, head);
+                Enumeration<Edge> enm = Edge.findEdgesByEnds(tail, head);
                 if (enm.hasMoreElements()) {
                     if (!directed) {
                         throw new RuntimeException(
@@ -146,7 +146,7 @@ public class Edge extends Element
                     } else {
                         Edge tmpedge = null;
                         while (enm.hasMoreElements()) {
-                            tmpedge = (Edge) enm.nextElement();
+                            tmpedge = enm.nextElement();
                             if (tmpedge.getHead() == head && tmpedge.getTail() == tail) {
                                 throw new RuntimeException(
                                     "cannot create multiple edges between the same nodes in the same direction in a strict directed graph");
@@ -451,7 +451,7 @@ public class Edge extends Element
      * @param node2 the other vertex of the set of edges to be returned, or null for no constraint on the other vertex
      * @return an enumeration of Edge objects.
      */
-    public static Enumeration findEdgesByEnds(Node node1, Node node2)
+    public static Enumeration<Edge> findEdgesByEnds(Node node1, Node node2)
     {
         if (node1 == null) {
             return Collections.emptyEnumeration();
@@ -459,7 +459,7 @@ public class Edge extends Element
         return new Enumerator(node1, node2);
     }
 
-    static class Enumerator implements Enumeration
+    static class Enumerator implements Enumeration<Edge>
     {
         Node node1 = null;
 
@@ -467,9 +467,9 @@ public class Edge extends Element
 
         Edge next = null;
 
-        Enumeration outEdges = null;
+        Enumeration<Edge> outEdges = null;
 
-        Enumeration inEdges = null;
+        Enumeration<Edge> inEdges = null;
 
         Enumerator(Node node1, Node node2)
         {
@@ -487,7 +487,7 @@ public class Edge extends Element
             Edge tmpEdge = null;
             if (this.outEdges != null) {
                 while (this.outEdges.hasMoreElements()) {
-                    tmpEdge = (Edge) this.outEdges.nextElement();
+                    tmpEdge = this.outEdges.nextElement();
                     if (this.node2 == null || tmpEdge.getHead() == this.node2) {
                         return tmpEdge;
                     }
@@ -496,7 +496,7 @@ public class Edge extends Element
             }
             if (this.inEdges != null) {
                 while (this.inEdges.hasMoreElements()) {
-                    tmpEdge = (Edge) this.inEdges.nextElement();
+                    tmpEdge = this.inEdges.nextElement();
                     if (this.node2 == null || tmpEdge.getTail() == this.node2) {
                         return tmpEdge;
                     }
@@ -506,12 +506,14 @@ public class Edge extends Element
             return null;
         }
 
+        @Override
         public boolean hasMoreElements()
         {
             return (this.next != null);
         }
 
-        public Object nextElement()
+        @Override
+        public Edge nextElement()
         {
             if (this.next == null) {
                 throw new NoSuchElementException("Node$Enumerator");

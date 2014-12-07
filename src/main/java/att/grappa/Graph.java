@@ -66,7 +66,7 @@ public class Graph extends Subgraph
     private String toolTipText = null;
 
     // list of panels displaying this graph
-    private List panelList = null;
+    private List<GrappaPanel> panelList = null;
 
     // counters for subgraph, node and edge elements (for id generation)
     private int gid = 0;
@@ -92,18 +92,18 @@ public class Graph extends Subgraph
     private boolean strict = false;
 
     // for mapping id to an element
-    Hashtable id2element = null;
+    Hashtable<Long, Element> id2element = null;
 
     // Grappa global attributes (apply to all elements)
-    private Hashtable grattributes = null;
+    private Hashtable<String, Attribute> grattributes = null;
 
     // tables for graph default node, edge and graph attributes, which are
     // initialized below
-    private static Hashtable sysdfltNodeAttributes = new Hashtable(8);
+    private static Hashtable<String, Attribute> sysdfltNodeAttributes = new Hashtable<>(8);
 
-    private static Hashtable sysdfltEdgeAttributes = new Hashtable(7);
+    private static Hashtable<String, Attribute> sysdfltEdgeAttributes = new Hashtable<>(7);
 
-    private static Hashtable sysdfltGraphAttributes = new Hashtable(11);
+    private static Hashtable<String, Attribute> sysdfltGraphAttributes = new Hashtable<>(11);
 
     // graph default node, edge and graph attributes, these should be
     // consistent with the dot layout program, although it is not necessary.
@@ -149,7 +149,7 @@ public class Graph extends Subgraph
     }
 
     // used for the above static initialization
-    private static void putAttribute(Hashtable table, int type, String name, String value)
+    private static void putAttribute(Hashtable<String, Attribute> table, int type, String name, String value)
     {
         Attribute attr = new Attribute(type, name, value);
         attr.clearChanged();
@@ -212,18 +212,17 @@ public class Graph extends Subgraph
         addIdMapping(this);
         setName(graphName);
 
-        Attribute attr = null;
-        Enumeration enm = getGlobalAttributePairs(GrappaConstants.NODE);
+        Enumeration<Attribute> enm = getGlobalAttributePairs(GrappaConstants.NODE);
         while (enm.hasMoreElements()) {
-            setNodeAttribute((Attribute) enm.nextElement());
+            setNodeAttribute(enm.nextElement());
         }
         enm = getGlobalAttributePairs(GrappaConstants.EDGE);
         while (enm.hasMoreElements()) {
-            setEdgeAttribute((Attribute) enm.nextElement());
+            setEdgeAttribute(enm.nextElement());
         }
         enm = getGlobalAttributePairs(GrappaConstants.SUBGRAPH);
         while (enm.hasMoreElements()) {
-            setAttribute((Attribute) enm.nextElement());
+            setAttribute(enm.nextElement());
         }
 
         setDelete(false);
@@ -333,7 +332,7 @@ public class Graph extends Subgraph
         if (this.grattributes == null) {
             return null;
         }
-        return ((Attribute) (this.grattributes.get(key)));
+        return this.grattributes.get(key);
     }
 
     /**
@@ -351,7 +350,7 @@ public class Graph extends Subgraph
         if (this.grattributes == null) {
             return null;
         }
-        Attribute attr = (Attribute) (this.grattributes.get(key));
+        Attribute attr = this.grattributes.get(key);
         if (attr == null) {
             return null;
         }
@@ -370,7 +369,7 @@ public class Graph extends Subgraph
     public Object setGrappaAttribute(String key, String value) throws IllegalArgumentException
     {
         if (this.grattributes == null) {
-            this.grattributes = new Hashtable(4);
+            this.grattributes = new Hashtable<>(4);
         }
         // the get also tests if key is null
         Attribute oldValue = getGrappaAttribute(key);
@@ -425,7 +424,7 @@ public class Graph extends Subgraph
      *
      * @return an Enumeration of Attribute objects
      */
-    public Enumeration getGrappaAttributeKeys()
+    public Enumeration<String> getGrappaAttributeKeys()
     {
         if (this.grattributes == null) {
             return Collections.emptyEnumeration();
@@ -463,11 +462,11 @@ public class Graph extends Subgraph
     {
         switch (type) {
             case GrappaConstants.NODE:
-                return ((Attribute) sysdfltNodeAttributes.get(key));
+                return sysdfltNodeAttributes.get(key);
             case GrappaConstants.EDGE:
-                return ((Attribute) sysdfltEdgeAttributes.get(key));
+                return sysdfltEdgeAttributes.get(key);
             case GrappaConstants.SUBGRAPH:
-                return ((Attribute) sysdfltGraphAttributes.get(key));
+                return sysdfltGraphAttributes.get(key);
         }
         throw new IllegalArgumentException("specified type must be NODE, EDGE or SUBGRAPH");
     }
@@ -482,7 +481,7 @@ public class Graph extends Subgraph
      * @see GrappaConstants#EDGE
      * @see GrappaConstants#SUBGRAPH
      */
-    public static Enumeration getGlobalAttributeKeys(int type) throws IllegalArgumentException
+    public static Enumeration<String> getGlobalAttributeKeys(int type) throws IllegalArgumentException
     {
         switch (type) {
             case GrappaConstants.NODE:
@@ -505,7 +504,7 @@ public class Graph extends Subgraph
      * @see GrappaConstants#EDGE
      * @see GrappaConstants#SUBGRAPH
      */
-    public static Enumeration getGlobalAttributePairs(int type) throws IllegalArgumentException
+    public static Enumeration<Attribute> getGlobalAttributePairs(int type) throws IllegalArgumentException
     {
         switch (type) {
             case GrappaConstants.NODE:
@@ -552,9 +551,9 @@ public class Graph extends Subgraph
             return null;
         }
         if (this.id2element == null) {
-            this.id2element = new Hashtable();
+            this.id2element = new Hashtable<>();
         }
-        return (Element) this.id2element.put(elem.getIdKey(), elem);
+        return this.id2element.put(elem.getIdKey(), elem);
     }
 
     /**
@@ -622,7 +621,7 @@ public class Graph extends Subgraph
         if (this.id2element == null) {
             return null;
         }
-        return (Element) this.id2element.get(idKey);
+        return this.id2element.get(idKey);
     }
 
     /**
@@ -1002,13 +1001,13 @@ public class Graph extends Subgraph
 
         boolean incomplete = true;
 
-        ListIterator li = null;
+        ListIterator<GrappaPanel> li = null;
 
         while (incomplete) {
             try {
                 li = this.panelList.listIterator(0);
                 while (li.hasNext()) {
-                    ((GrappaPanel) li.next()).repaint();
+                    li.next().repaint();
                 }
             } catch (ConcurrentModificationException cme) {
                 continue;
@@ -1028,7 +1027,7 @@ public class Graph extends Subgraph
 
         boolean incomplete = true;
 
-        ListIterator li = null;
+        ListIterator<GrappaPanel> li = null;
 
         GrappaPanel panel = null;
 
@@ -1036,7 +1035,7 @@ public class Graph extends Subgraph
             try {
                 li = this.panelList.listIterator(0);
                 while (li.hasNext()) {
-                    panel = ((GrappaPanel) li.next());
+                    panel = li.next();
                     panel.paintImmediately(panel.getVisibleRect());
                 }
             } catch (ConcurrentModificationException cme) {
@@ -1054,7 +1053,7 @@ public class Graph extends Subgraph
     public void addPanel(GrappaPanel panel)
     {
         if (this.panelList == null) {
-            this.panelList = Collections.synchronizedList(new LinkedList());
+            this.panelList = Collections.synchronizedList(new LinkedList<GrappaPanel>());
         }
         synchronized (this.panelList) {
             if (!this.panelList.contains(panel)) {

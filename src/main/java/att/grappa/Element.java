@@ -13,8 +13,14 @@ package att.grappa;
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+
+import att.grappa.util.IteratorEnumeration;
 
 /**
  * This abstract class is the root class for the <A HREF="att.grappa.Node.html">Node</A>, <A
@@ -25,8 +31,7 @@ import java.util.Vector;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public abstract class Element
-    implements att.grappa.GrappaConstants
+public abstract class Element implements att.grappa.GrappaConstants
 {
     // the containing graph and the parent subgraph element
     private Graph graph = null;
@@ -48,7 +53,7 @@ public abstract class Element
      * A look-up table that allows a user (via setUserAttributeType) to associate a String-to-Object and vice versa
      * translation for attributes they may supply.
      */
-    private static Hashtable userAttributeTypeMap = null;
+    private static Map<String, Integer> userAttributeTypeMap = null;
 
     /**
      * A general-purpose object not used by Grappa and intended for application writers to attach whatever they want to
@@ -99,10 +104,10 @@ public abstract class Element
     String name = null;
 
     // attributes
-    Hashtable attributes = null;
+    Map<String, Attribute> attributes = null;
 
     // attributes
-    Hashtable attrsOfInterest = null;
+    private Set<String> attrsOfInterest = null;
 
     // the Shape for drawing
     GrappaNexus grappaNexus = null;
@@ -300,9 +305,9 @@ public abstract class Element
             return;
         }
         if (this.attrsOfInterest == null) {
-            this.attrsOfInterest = new Hashtable();
+            this.attrsOfInterest = new HashSet<String>();
         }
-        this.attrsOfInterest.put(name, name);
+        this.attrsOfInterest.add(name);
         if (this.grappaNexus != null) {
             Attribute attr = getAttribute(name);
             if (attr != null) {
@@ -335,12 +340,12 @@ public abstract class Element
      *
      * @return an enumeration of attribute names that are of interest
      */
-    public Enumeration listAttrsOfInterest()
+    public Enumeration<String> listAttrsOfInterest()
     {
         if (this.attrsOfInterest == null) {
             return Collections.emptyEnumeration();
         }
-        return this.attrsOfInterest.elements();
+        return new IteratorEnumeration<String>(this.attrsOfInterest.iterator());
     }
 
     /**
@@ -383,7 +388,7 @@ public abstract class Element
     public Object setAttribute(String name, Object value)
     {
         if (this.attributes == null) {
-            this.attributes = new Hashtable();
+            this.attributes = new Hashtable<>();
         }
         if (name == null) {
             throw new IllegalArgumentException("cannot set an attribute using a null name");
@@ -436,7 +441,7 @@ public abstract class Element
         Attribute dfltAttr = getDefaultAttribute(name);
         Attribute attr = null;
         if (this.attributes != null) {
-            attr = (Attribute) this.attributes.remove(name);
+            attr = this.attributes.remove(name);
         }
         if (attr == null) {
             return dfltAttr;
@@ -546,12 +551,12 @@ public abstract class Element
      * @return an Enumeration of String objects
      */
 
-    public Enumeration getLocalAttributeKeys()
+    public Enumeration<String> getLocalAttributeKeys()
     {
         if (this.attributes == null) {
             return Collections.emptyEnumeration();
         }
-        return (this.attributes.keys());
+        return (new IteratorEnumeration<>(this.attributes.keySet().iterator()));
     }
 
     /**
@@ -559,12 +564,12 @@ public abstract class Element
      *
      * @return an Enumeration of the (local) Attribute objects.
      */
-    public Enumeration getLocalAttributePairs()
+    public Enumeration<Attribute> getLocalAttributePairs()
     {
         if (this.attributes == null) {
             return Collections.emptyEnumeration();
         }
-        return (this.attributes.elements());
+        return (new IteratorEnumeration<>(this.attributes.values().iterator()));
     }
 
     /**
@@ -572,17 +577,17 @@ public abstract class Element
      *
      * @return an enumeration of local and default Attribute objects for this element.
      */
-    public Enumeration getAttributePairs()
+    public Enumeration<Attribute> getAttributePairs()
     {
-        Hashtable pairs = null;
+        Map<String, Attribute> pairs = null;
         Attribute attr = null;
 
-        Enumeration enm = getLocalAttributePairs();
+        Enumeration<Attribute> enm = getLocalAttributePairs();
         if (enm.hasMoreElements()) {
-            pairs = new Hashtable(32);
+            pairs = new HashMap<>(32);
         }
         while (enm.hasMoreElements()) {
-            attr = (Attribute) enm.nextElement();
+            attr = enm.nextElement();
             pairs.put(attr.getName(), attr);
         }
 
@@ -600,12 +605,12 @@ public abstract class Element
 
         if (pairs != null) {
             while (enm.hasMoreElements()) {
-                attr = (Attribute) enm.nextElement();
+                attr = enm.nextElement();
                 if (!pairs.containsKey(attr.getName())) {
                     pairs.put(attr.getName(), attr);
                 }
             }
-            return pairs.elements();
+            return new IteratorEnumeration<>(pairs.values().iterator());
         }
 
         return enm;
@@ -623,7 +628,7 @@ public abstract class Element
         if (this.attributes == null) {
             return (null);
         }
-        return ((Attribute) (this.attributes.get(key)));
+        return this.attributes.get(key);
     }
 
     /**
@@ -642,7 +647,7 @@ public abstract class Element
         if (this.attributes == null) {
             return (null);
         }
-        if ((attr = (Attribute) (this.attributes.get(key))) == null) {
+        if ((attr = this.attributes.get(key)) == null) {
             return (null);
         }
         if ((sg = getSubgraph()) == null) {
@@ -911,21 +916,21 @@ public abstract class Element
         String key;
         boolean first = true;
         // thanks to Ginny Travers (bbn.com) for suggesting the printlist feature
-        Hashtable printlist = null;
+        Hashtable<String, String> printlist = null;
 
         if (Grappa.usePrintList || usePrintList) {
-            printlist = (Hashtable) getAttributeValue(PRINTLIST_ATTR);
+            printlist = (Hashtable<String, String>) getAttributeValue(PRINTLIST_ATTR);
         }
 
-        Enumeration attrs = null;
+        Enumeration<Attribute> attrs = null;
         if (Grappa.elementPrintAllAttributes || this.printAllAttributes) {
             attrs = getAttributePairs();
         } else if (this.attributes != null && !this.attributes.isEmpty()) {
-            attrs = this.attributes.elements();
+            attrs = new IteratorEnumeration<Attribute>(this.attributes.values().iterator());
         }
         if (attrs != null) {
             while (attrs.hasMoreElements()) {
-                attr = (Attribute) (attrs.nextElement());
+                attr = attrs.nextElement();
                 key = attr.getName();
                 if (printlist != null && printlist.get(key) == null) {
                     continue;
@@ -988,7 +993,6 @@ public abstract class Element
 
         StringBuilder strbuf = new StringBuilder(len + 8);
         char[] array = input.toCharArray();
-        char ch;
         boolean has_special = false;
         boolean isHTML = false;
         String tmpstr;
@@ -1107,11 +1111,9 @@ public abstract class Element
             return (false);
         }
         String name = getName();
-        Enumeration enm = null;
         if (this.attributes != null && this.grappaNexus != null) {
-            enm = this.attributes.elements();
-            while (enm.hasMoreElements()) {
-                ((Attribute) enm.nextElement()).deleteObserver(this.grappaNexus);
+            for (Attribute attribute : this.attributes.values()) {
+                attribute.deleteObserver(this.grappaNexus);
             }
         }
         Element elem = null;
@@ -1129,9 +1131,8 @@ public abstract class Element
         }
         switch (getType()) {
             case GrappaConstants.NODE:
-                enm = ((Node) this).edgeElements();
-                while (enm.hasMoreElements()) {
-                    elem = (Element) (enm.nextElement());
+                for (Enumeration<Edge> edges = ((Node) this).edgeElements(); edges.hasMoreElements();) {
+                    elem = edges.nextElement();
                     prnt = elem.getSubgraph();
                     while (prnt != null) {
                         if (prnt.grappaNexus != null) {
@@ -1139,7 +1140,7 @@ public abstract class Element
                         }
                         prnt = prnt.getSubgraph();
                     }
-                    ((Edge) elem).delete();
+                    elem.delete();
                 }
                 getSubgraph().removeNode(name);
                 break;
@@ -1149,23 +1150,14 @@ public abstract class Element
                 getSubgraph().removeEdge(name);
                 break;
             case GrappaConstants.SUBGRAPH:
-                enm = ((Subgraph) this).nodeElements();
-                elem = null;
-                while (enm.hasMoreElements()) {
-                    elem = (Element) enm.nextElement();
-                    elem.delete();
+                for (Enumeration<Node> nodes = ((Subgraph) this).nodeElements(); nodes.hasMoreElements();) {
+                    nodes.nextElement().delete();
                 }
-                enm = ((Subgraph) this).edgeElements();
-                elem = null;
-                while (enm.hasMoreElements()) {
-                    elem = (Element) enm.nextElement();
-                    elem.delete();
+                for (Enumeration<Edge> edges = ((Subgraph) this).edgeElements(); edges.hasMoreElements();) {
+                    edges.nextElement().delete();
                 }
-                enm = ((Subgraph) this).subgraphElements();
-                elem = null;
-                while (enm.hasMoreElements()) {
-                    elem = (Element) enm.nextElement();
-                    elem.delete();
+                for (Enumeration<Subgraph> sgs = ((Subgraph) this).subgraphElements(); sgs.hasMoreElements();) {
+                    sgs.nextElement().delete();
                 }
                 if (getSubgraph() != null) {
                     getSubgraph().removeSubgraph(name);
@@ -1188,18 +1180,18 @@ public abstract class Element
     public void addTag(String tag)
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
 
         if (tag == null || tag.indexOf(',') >= 0) {
             throw new RuntimeException("tag value null or contains a comma (" + tag + ")");
         }
 
         if ((attr = getLocalAttribute(TAG_ATTR)) == null) {
-            attr = new Attribute(getType(), TAG_ATTR, new Hashtable());
+            attr = new Attribute(getType(), TAG_ATTR, new Hashtable<String, String>());
             setAttribute(attr);
             attr = getAttribute(TAG_ATTR); // needed
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
 
         tags.put(tag, tag);
         // if it becomes desireable to retain the original order, we
@@ -1220,7 +1212,7 @@ public abstract class Element
     public boolean hasTag(String tag)
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
 
         if (tag == null || tag.indexOf(',') >= 0) {
             throw new RuntimeException("tag value null or contains a comma (" + tag + ")");
@@ -1229,7 +1221,7 @@ public abstract class Element
         if ((attr = getLocalAttribute(TAG_ATTR)) == null) {
             return (hasDefaultTag(tag));
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1245,11 +1237,11 @@ public abstract class Element
     public boolean hasLocalTag(String tag)
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         if ((attr = getLocalAttribute(TAG_ATTR)) == null) {
             return false;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1265,12 +1257,12 @@ public abstract class Element
     public boolean hasDefaultTag(String tag)
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
 
         if ((attr = getDefaultAttribute(TAG_ATTR)) == null) {
             return false;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1285,12 +1277,12 @@ public abstract class Element
     public boolean hasTags()
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
 
         if ((attr = getLocalAttribute(TAG_ATTR)) == null) {
             return (hasDefaultTags());
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1305,11 +1297,11 @@ public abstract class Element
     public boolean hasLocalTags()
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         if ((attr = getLocalAttribute(TAG_ATTR)) == null) {
             return false;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1324,12 +1316,12 @@ public abstract class Element
     public boolean hasDefaultTags()
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
 
         if ((attr = getDefaultAttribute(TAG_ATTR)) == null) {
             return false;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1342,11 +1334,11 @@ public abstract class Element
     public void removeTags()
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         if ((attr = getLocalAttribute(TAG_ATTR)) == null) {
             return;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return;
         }
@@ -1361,11 +1353,11 @@ public abstract class Element
     public void removeTag(String tag)
     {
         Attribute attr;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         if ((attr = getLocalAttribute(TAG_ATTR)) == null) {
             return;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return;
         }
@@ -1421,9 +1413,9 @@ public abstract class Element
         }
 
         if (userAttributeTypeMap == null) {
-            userAttributeTypeMap = new Hashtable();
+            userAttributeTypeMap = new Hashtable<String, Integer>();
         }
-        Integer old = (Integer) (userAttributeTypeMap.get(attrname));
+        Integer old = userAttributeTypeMap.get(attrname);
         if (old != null) {
             oldtype = old.intValue();
         }
@@ -1476,7 +1468,7 @@ public abstract class Element
             } else if (hashCode == WIDTH_HASH && attrname.equals(WIDTH_ATTR)) {
                 convtype = DOUBLE_TYPE;
             } else if (userAttributeTypeMap != null) {
-                Integer usertype = (Integer) (userAttributeTypeMap.get(attrname));
+                Integer usertype = userAttributeTypeMap.get(attrname);
                 if (usertype == null) {
                     convtype = STRING_TYPE;
                 } else {
@@ -1499,9 +1491,9 @@ public abstract class Element
         if (this.grappaNexus == null) {
             this.grappaNexus = new GrappaNexus(this);
             Attribute attr = null;
-            Enumeration enm = listAttrsOfInterest();
+            Enumeration<String> enm = listAttrsOfInterest();
             while (enm.hasMoreElements()) {
-                attr = getAttribute((String) enm.nextElement());
+                attr = getAttribute(enm.nextElement());
                 if (attr != null) {
                     attr.addObserver(this.grappaNexus);
                 }
@@ -1532,35 +1524,31 @@ public abstract class Element
      *         increasing order gives breadth-first search results, while using decreasing order gives depth-first
      *         results.
      */
-    public Vector bdfs(int steps)
+    public Vector<Vector<Element>> bdfs(int steps)
     {
 
-        Vector input, layers;
-        Element elem;
-        int size;
-
-        input = new Vector(1);
+        Vector<Element> input;
+        Vector<Vector<Element>> layers;
+        input = new Vector<>(1);
         input.addElement(this);
 
-        layers = new Vector();
+        layers = new Vector<>();
 
         synchronized (getGraph()) {
             doBDFS(getType(), steps, System.currentTimeMillis(), 0, input, layers);
         }
 
-        return (layers);
+        return layers;
     }
 
-    private static void doBDFS(int type, int depth, long stamp, int level, Vector inbox, Vector layers)
+    private static void doBDFS(int type, int depth, long stamp, int level, Vector<Element> inbox,
+        Vector<Vector<Element>> layers)
     {
-
         Element elem;
         Subgraph subg;
         Edge edge;
-        Node node;
-        int sz, szz;
-        Enumeration enm;
-        Vector input;
+        int sz;
+        Vector<Element> input;
 
         if ((sz = inbox.size()) == 0) {
             return;
@@ -1574,20 +1562,19 @@ public abstract class Element
             return;
         }
 
-        input = new Vector();
+        input = new Vector<>();
 
         for (int i = 0; i < sz; i++) {
 
-            elem = (Element) inbox.elementAt(i);
+            elem = inbox.elementAt(i);
 
             if (type == SUBGRAPH) {
 
                 // stack.addElement(elem);
 
                 if (depth < 0 || level <= depth) {
-                    enm = ((Subgraph) elem).subgraphElements();
-                    while (enm.hasMoreElements()) {
-                        subg = (Subgraph) (enm.nextElement());
+                    for (Enumeration<Subgraph> sgs = ((Subgraph) elem).subgraphElements(); sgs.hasMoreElements();) {
+                        subg = sgs.nextElement();
                         if (subg.visastamp != stamp) {
                             input.addElement(subg);
                             subg.visastamp = stamp;
@@ -1600,9 +1587,8 @@ public abstract class Element
                 // stack.addElement(elem);
 
                 if (depth < 0 || level <= depth) {
-                    enm = ((Node) elem).outEdgeElements();
-                    while (enm.hasMoreElements()) {
-                        edge = (Edge) (enm.nextElement());
+                    for (Enumeration<Edge> edges = ((Node) elem).outEdgeElements(); edges.hasMoreElements();) {
+                        edge = edges.nextElement();
                         if (edge.goesForward()) {
                             if (edge.getHead().visastamp != stamp) {
                                 input.addElement(edge.getHead());
@@ -1610,9 +1596,8 @@ public abstract class Element
                             }
                         }
                     }
-                    enm = ((Node) elem).inEdgeElements();
-                    while (enm.hasMoreElements()) {
-                        edge = (Edge) (enm.nextElement());
+                    for (Enumeration<Edge> edges = ((Node) elem).inEdgeElements(); edges.hasMoreElements();) {
+                        edge = edges.nextElement();
                         if (edge.goesReverse()) {
                             if (edge.getTail().visastamp != stamp) {
                                 input.addElement(edge.getTail());
@@ -1625,12 +1610,14 @@ public abstract class Element
             } else { // type == EDGE
 
                 // stack.addElement(elem);
+                Edge ee = (Edge) elem;
+                Enumeration<Edge> edges;
 
                 if (depth < 0 || level <= depth) {
-                    if (((Edge) elem).goesForward()) {
-                        enm = ((Edge) elem).getHead().outEdgeElements();
-                        while (enm.hasMoreElements()) {
-                            edge = (Edge) (enm.nextElement());
+                    if (ee.goesForward()) {
+                        edges = ee.getHead().outEdgeElements();
+                        while (edges.hasMoreElements()) {
+                            edge = edges.nextElement();
                             if (edge.goesForward()) {
                                 if (edge.visastamp != stamp) {
                                     input.addElement(edge);
@@ -1638,9 +1625,9 @@ public abstract class Element
                                 }
                             }
                         }
-                        enm = ((Edge) elem).getHead().inEdgeElements();
-                        while (enm.hasMoreElements()) {
-                            edge = (Edge) (enm.nextElement());
+                        edges = ee.getHead().inEdgeElements();
+                        while (edges.hasMoreElements()) {
+                            edge = edges.nextElement();
                             if (edge.goesReverse()) {
                                 if (edge.visastamp != stamp) {
                                     input.addElement(edge);
@@ -1649,10 +1636,10 @@ public abstract class Element
                             }
                         }
                     }
-                    if (((Edge) elem).goesReverse()) {
-                        enm = ((Edge) elem).getTail().outEdgeElements();
-                        while (enm.hasMoreElements()) {
-                            edge = (Edge) (enm.nextElement());
+                    if (ee.goesReverse()) {
+                        edges = ee.getTail().outEdgeElements();
+                        while (edges.hasMoreElements()) {
+                            edge = edges.nextElement();
                             if (edge.goesForward()) {
                                 if (edge.visastamp != stamp) {
                                     input.addElement(edge);
@@ -1660,9 +1647,9 @@ public abstract class Element
                                 }
                             }
                         }
-                        enm = ((Edge) elem).getTail().inEdgeElements();
-                        while (enm.hasMoreElements()) {
-                            edge = (Edge) (enm.nextElement());
+                        edges = ee.getTail().inEdgeElements();
+                        while (edges.hasMoreElements()) {
+                            edge = edges.nextElement();
                             if (edge.goesReverse()) {
                                 if (edge.visastamp != stamp) {
                                     input.addElement(edge);

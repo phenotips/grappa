@@ -227,9 +227,9 @@ public class GrappaStyle
     static String defaultStrokeString = generateStrokeString(STYLE_LINE_WIDTH_DEFAULT, STYLE_CAP_DEFAULT,
         STYLE_JOIN_DEFAULT, STYLE_MITER_LIMIT_DEFAULT, STYLE_DASH_DEFAULT, STYLE_DASH_PHASE_DEFAULT);
 
-    private static Hashtable styleTypes = new Hashtable(20);
+    private static Hashtable<String, Integer> styleTypes = new Hashtable<>(20);
 
-    private static Hashtable strokeCache = new Hashtable(4);
+    private static Hashtable<String, BasicStroke> strokeCache = new Hashtable<>(4);
 
     static {
         styleTypes.put("solid", new Integer(STYLE_SOLID));
@@ -604,7 +604,7 @@ public class GrappaStyle
 
         String strokeString =
             generateStrokeString(this.line_width, this.cap, this.join, this.miter_limit, this.dash, this.dash_phase);
-        if ((this.stroke = (BasicStroke) strokeCache.get(strokeString)) == null) {
+        if ((this.stroke = strokeCache.get(strokeString)) == null) {
             this.stroke =
                 new BasicStroke(this.line_width, this.cap, this.join, this.miter_limit, this.dash, this.dash_phase);
             strokeCache.put(strokeString, this.stroke);

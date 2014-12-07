@@ -15,9 +15,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Vector;
+
+import att.grappa.util.IteratorEnumeration;
 
 /**
  * This class describes a subgraph, which can consist of nodes, edges and other subgraphs. Note: The topmost or root
@@ -28,8 +32,7 @@ import java.util.Vector;
  *         AT&T Labs</a>
  * @see Graph
  */
-public class Subgraph extends Element
-    implements Comparator
+public class Subgraph extends Element implements Comparator<Element>
 {
     /**
      * Default graph name prefix used by setName().
@@ -39,13 +42,13 @@ public class Subgraph extends Element
     public final static String defaultNamePrefix = "G";
 
     // node, edge and graph dictionaries for this subgraph
-    private Hashtable nodedict = null;
+    private Map<String, Node> nodedict = null;
 
-    private Hashtable edgedict = null;
+    private Map<String, Edge> edgedict = null;
 
-    private Hashtable graphdict = null;
+    private Map<String, Subgraph> graphdict = null;
 
-    // indicators for dislaying element labels when drawing
+    // indicators for displaying element labels when drawing
     private boolean nodeLabels = true;
 
     private boolean edgeLabels = true;
@@ -53,10 +56,10 @@ public class Subgraph extends Element
     private boolean subgLabels = true;
 
     // default node attributes
-    private Hashtable nodeAttributes = null;
+    private Map<String, Attribute> nodeAttributes = null;
 
     // default edge attributes
-    private Hashtable edgeAttributes = null;
+    private Map<String, Attribute> edgeAttributes = null;
 
     // for cluster subgraphs
     private boolean cluster = false;
@@ -88,17 +91,17 @@ public class Subgraph extends Element
         super(SUBGRAPH, subg);
         setName(name);
 
-        Enumeration enm = subg.getNodeAttributePairs();
+        Enumeration<Attribute> enm = subg.getNodeAttributePairs();
         while (enm.hasMoreElements()) {
-            setNodeAttribute((Attribute) enm.nextElement());
+            setNodeAttribute(enm.nextElement());
         }
         enm = subg.getEdgeAttributePairs();
         while (enm.hasMoreElements()) {
-            setEdgeAttribute((Attribute) enm.nextElement());
+            setEdgeAttribute(enm.nextElement());
         }
         enm = subg.getLocalAttributePairs();
         while (enm.hasMoreElements()) {
-            setAttribute((Attribute) enm.nextElement());
+            setAttribute(enm.nextElement());
         }
 
         subgraphAttrsOfInterest();
@@ -252,7 +255,7 @@ public class Subgraph extends Element
         if (this.nodeAttributes == null) {
             return (null);
         }
-        return ((Attribute) (this.nodeAttributes.get(key)));
+        return this.nodeAttributes.get(key);
     }
 
     /**
@@ -267,7 +270,7 @@ public class Subgraph extends Element
         if (this.nodeAttributes == null) {
             return (null);
         }
-        if ((attr = (Attribute) (this.nodeAttributes.get(key))) == null) {
+        if ((attr = this.nodeAttributes.get(key)) == null) {
             return (null);
         }
         return (attr.getValue());
@@ -278,12 +281,12 @@ public class Subgraph extends Element
      *
      * @return an enumeration of String objects.
      */
-    public Enumeration getNodeAttributeKeys()
+    public Enumeration<String> getNodeAttributeKeys()
     {
         if (this.nodeAttributes == null) {
             return Collections.emptyEnumeration();
         }
-        return (this.nodeAttributes.keys());
+        return new IteratorEnumeration<>(this.nodeAttributes.keySet().iterator());
     }
 
     /**
@@ -291,12 +294,12 @@ public class Subgraph extends Element
      *
      * @return an enumeration of Attribute objects.
      */
-    public Enumeration getNodeAttributePairs()
+    public Enumeration<Attribute> getNodeAttributePairs()
     {
         if (this.nodeAttributes == null) {
             return Collections.emptyEnumeration();
         }
-        return (this.nodeAttributes.elements());
+        return new IteratorEnumeration<>(this.nodeAttributes.values().iterator());
     }
 
     /**
@@ -313,7 +316,7 @@ public class Subgraph extends Element
             return null;
         }
         if (this.nodeAttributes == null) {
-            this.nodeAttributes = new Hashtable();
+            this.nodeAttributes = new Hashtable<>();
         }
         // check to see if attr is being passed down the subgraph chain
         Subgraph sg = getSubgraph();
@@ -364,7 +367,7 @@ public class Subgraph extends Element
     public Object setNodeAttribute(String name, Object value)
     {
         if (this.nodeAttributes == null) {
-            this.nodeAttributes = new Hashtable();
+            this.nodeAttributes = new Hashtable<>();
         }
         if (name == null) {
             throw new IllegalArgumentException("cannot set an attribute using a null name");
@@ -425,7 +428,7 @@ public class Subgraph extends Element
             return;
         }
         // System.err.println("Remove '" + name + "' from " + getName());
-        Attribute attr = (Attribute) this.nodeAttributes.remove(name);
+        Attribute attr = this.nodeAttributes.remove(name);
         if (attr == null) {
             return;
         }
@@ -450,7 +453,7 @@ public class Subgraph extends Element
             return null;
         }
         if (this.edgeAttributes == null) {
-            this.edgeAttributes = new Hashtable();
+            this.edgeAttributes = new Hashtable<>();
         }
         // check to see if attr is being passed down the subgraph chain
         Subgraph sg = getSubgraph();
@@ -500,7 +503,7 @@ public class Subgraph extends Element
     public Object setEdgeAttribute(String name, Object value)
     {
         if (this.edgeAttributes == null) {
-            this.edgeAttributes = new Hashtable();
+            this.edgeAttributes = new Hashtable<>();
         }
         if (name == null) {
             throw new IllegalArgumentException("cannot set an attribute using a null name");
@@ -555,7 +558,7 @@ public class Subgraph extends Element
         if (name == null || this.edgeAttributes == null) {
             return;
         }
-        Attribute attr = (Attribute) this.edgeAttributes.remove(name);
+        Attribute attr = this.edgeAttributes.remove(name);
         if (attr == null) {
             return;
         }
@@ -581,7 +584,7 @@ public class Subgraph extends Element
             return null;
         }
         if (this.attributes == null) {
-            this.attributes = new Hashtable();
+            this.attributes = new Hashtable<>();
         }
         // check to see if attr is being passed down the subgraph chain
         Subgraph sg = getSubgraph();
@@ -633,7 +636,7 @@ public class Subgraph extends Element
     public Object setAttribute(String name, Object value)
     {
         if (this.attributes == null) {
-            this.attributes = new Hashtable();
+            this.attributes = new Hashtable<>();
         }
         if (name == null) {
             throw new IllegalArgumentException("cannot set an attribute using a null name");
@@ -705,7 +708,7 @@ public class Subgraph extends Element
         if (this.edgeAttributes == null) {
             return (null);
         }
-        return ((Attribute) (this.edgeAttributes.get(key)));
+        return this.edgeAttributes.get(key);
     }
 
     /**
@@ -720,7 +723,7 @@ public class Subgraph extends Element
         if (this.edgeAttributes == null) {
             return (null);
         }
-        if ((attr = (Attribute) (this.edgeAttributes.get(key))) == null) {
+        if ((attr = this.edgeAttributes.get(key)) == null) {
             return (null);
         }
         return (attr.getValue());
@@ -731,12 +734,12 @@ public class Subgraph extends Element
      *
      * @return an enumeration of String objects.
      */
-    public Enumeration getEdgeAttributeKeys()
+    public Enumeration<String> getEdgeAttributeKeys()
     {
         if (this.edgeAttributes == null) {
             return Collections.emptyEnumeration();
         }
-        return (this.edgeAttributes.keys());
+        return new IteratorEnumeration<>(this.edgeAttributes.keySet().iterator());
     }
 
     /**
@@ -744,12 +747,12 @@ public class Subgraph extends Element
      *
      * @return an enumeration of Attribute objects.
      */
-    public Enumeration getEdgeAttributePairs()
+    public Enumeration<Attribute> getEdgeAttributePairs()
     {
         if (this.edgeAttributes == null) {
             return Collections.emptyEnumeration();
         }
-        return (this.edgeAttributes.elements());
+        return new IteratorEnumeration<>(this.edgeAttributes.values().iterator());
     }
 
     /**
@@ -881,23 +884,20 @@ public class Subgraph extends Element
         printDflt(out, EDGE);
 
         if (this.graphdict != null && !this.graphdict.isEmpty()) {
-            Enumeration elems = this.graphdict.elements();
-            while (elems.hasMoreElements()) {
-                ((Subgraph) (elems.nextElement())).printSubgraph(out);
+            for (Subgraph sg : this.graphdict.values()) {
+                sg.printSubgraph(out);
             }
         }
 
         if (this.nodedict != null && !this.nodedict.isEmpty()) {
-            Enumeration elems = this.nodedict.elements();
-            while (elems.hasMoreElements()) {
-                ((Node) (elems.nextElement())).printNode(out);
+            for (Node n : this.nodedict.values()) {
+                n.printNode(out);
             }
         }
 
         if (this.edgedict != null && !this.edgedict.isEmpty()) {
-            Enumeration elems = this.edgedict.elements();
-            while (elems.hasMoreElements()) {
-                ((Edge) (elems.nextElement())).printEdge(out);
+            for (Edge e : this.edgedict.values()) {
+                e.printEdge(out);
             }
         }
 
@@ -910,7 +910,7 @@ public class Subgraph extends Element
     private void printDflt(PrintWriter out, int type)
     {
         String indent = new String(getGraph().getIndent());
-        Hashtable attr = null;
+        Map<String, Attribute> attr = null;
         String label = null;
 
         switch (type) {
@@ -939,23 +939,20 @@ public class Subgraph extends Element
     }
 
     // print the subgraph default element attribute values
-    private void printDfltAttr(PrintWriter out, Hashtable dfltAttr, int type, String prefix, String suffix)
+    private void printDfltAttr(PrintWriter out, Map<String, Attribute> dfltAttr, int type, String prefix, String suffix)
     {
         String indent = new String(getGraph().getIndent());
         String value;
         String key;
-        Attribute attr;
         int nbr = 0;
-        Enumeration attrs = dfltAttr.elements();
         Subgraph sg = getSubgraph();
-        Hashtable printlist = null;
+        Hashtable<String, String> printlist = null;
 
         if (type == SUBGRAPH && (Grappa.usePrintList || usePrintList)) {
-            printlist = (Hashtable) getAttributeValue(PRINTLIST_ATTR);
+            printlist = (Hashtable<String, String>) getAttributeValue(PRINTLIST_ATTR);
         }
 
-        while (attrs.hasMoreElements()) {
-            attr = (Attribute) (attrs.nextElement());
+        for (Attribute attr : dfltAttr.values()) {
             if (attr == null) {
                 continue;
             }
@@ -1085,17 +1082,17 @@ public class Subgraph extends Element
         switch (type) {
             case NODE:
                 if (this.nodedict != null) {
-                    elem = (Element) this.nodedict.get(name);
+                    elem = this.nodedict.get(name);
                 }
                 break;
             case EDGE:
                 if (this.edgedict != null) {
-                    elem = (Element) this.edgedict.get(name);
+                    elem = this.edgedict.get(name);
                 }
                 break;
             case SUBGRAPH:
                 if (this.graphdict != null) {
-                    elem = (Element) this.graphdict.get(name);
+                    elem = this.graphdict.get(name);
                 }
                 break;
         }
@@ -1104,9 +1101,8 @@ public class Subgraph extends Element
             return elem;
         }
 
-        Enumeration enm = this.graphdict.elements();
-        while (enm.hasMoreElements()) {
-            if ((elem = ((Subgraph) enm.nextElement()).findElementInSubgraphByName(type, name)) != null) {
+        for (Subgraph sg : this.graphdict.values()) {
+            if ((elem = sg.findElementInSubgraphByName(type, name)) != null) {
                 return elem;
             }
         }
@@ -1245,7 +1241,7 @@ public class Subgraph extends Element
             return;
         }
         if (this.nodedict == null) {
-            this.nodedict = new Hashtable();
+            this.nodedict = new HashMap<>();
         }
         this.nodedict.put(newNode.getName(), newNode);
     }
@@ -1261,7 +1257,7 @@ public class Subgraph extends Element
         if (this.nodedict == null) {
             return (null);
         }
-        return ((Node) (this.nodedict.remove(nodeName)));
+        return this.nodedict.remove(nodeName);
     }
 
     /**
@@ -1275,7 +1271,7 @@ public class Subgraph extends Element
             return;
         }
         if (this.edgedict == null) {
-            this.edgedict = new Hashtable();
+            this.edgedict = new HashMap<>();
         }
         this.edgedict.put(newEdge.getName(), newEdge);
     }
@@ -1291,7 +1287,7 @@ public class Subgraph extends Element
         if (this.edgedict == null) {
             return (null);
         }
-        return ((Edge) (this.edgedict.remove(edgeName)));
+        return this.edgedict.remove(edgeName);
     }
 
     /**
@@ -1305,7 +1301,7 @@ public class Subgraph extends Element
             return;
         }
         if (this.graphdict == null) {
-            this.graphdict = new Hashtable();
+            this.graphdict = new HashMap<>();
         }
         this.graphdict.put(newGraph.getName(), newGraph);
     }
@@ -1321,7 +1317,7 @@ public class Subgraph extends Element
         if (this.graphdict == null) {
             return (null);
         }
-        return ((Subgraph) (this.graphdict.remove(graphName)));
+        return this.graphdict.remove(graphName);
     }
 
     /**
@@ -1426,7 +1422,7 @@ public class Subgraph extends Element
             throw new RuntimeException("tag value null or contains a comma (" + tag + ")");
         }
         Attribute attr = null;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         switch (type) {
             case NODE:
                 attr = getNodeAttribute(TAG_ATTR);
@@ -1439,7 +1435,7 @@ public class Subgraph extends Element
                 break;
         }
         if (attr == null) {
-            attr = new Attribute(type, TAG_ATTR, new Hashtable());
+            attr = new Attribute(type, TAG_ATTR, new Hashtable<String, String>());
             setAttribute(attr);
             switch (type) {
                 case NODE:
@@ -1453,7 +1449,7 @@ public class Subgraph extends Element
                     break;
             }
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
 
         tags.put(tag, tag);
         // if it becomes desireable to retain the original order, we
@@ -1506,7 +1502,7 @@ public class Subgraph extends Element
     public boolean hasTypeTags(int type)
     {
         Attribute attr = null;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         switch (type) {
             case NODE:
                 attr = getNodeAttribute(TAG_ATTR);
@@ -1521,7 +1517,7 @@ public class Subgraph extends Element
         if (attr == null) {
             return false;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1567,7 +1563,7 @@ public class Subgraph extends Element
     public void removeTypeTag(int type, String tag)
     {
         Attribute attr = null;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         switch (type) {
             case NODE:
                 attr = getNodeAttribute(TAG_ATTR);
@@ -1582,7 +1578,7 @@ public class Subgraph extends Element
         if (attr == null) {
             return;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return;
         }
@@ -1636,9 +1632,8 @@ public class Subgraph extends Element
             if ((types & SUBGRAPH) != 0) {
                 count += this.graphdict.size();
             }
-            Enumeration enm = this.graphdict.elements();
-            while (enm.hasMoreElements()) {
-                count += ((Subgraph) enm.nextElement()).countOfElements(types);
+            for (Subgraph sg : this.graphdict.values()) {
+                count += sg.countOfElements(types);
             }
         }
         return count;
@@ -1658,9 +1653,8 @@ public class Subgraph extends Element
             return;
         }
         if (this.graphdict != null) {
-            Enumeration enm = this.graphdict.elements();
-            while (enm.hasMoreElements()) {
-                ((Subgraph) enm.nextElement()).removeEmptySubgraphs();
+            for (Subgraph sg : this.graphdict.values()) {
+                sg.removeEmptySubgraphs();
             }
         }
     }
@@ -1678,9 +1672,8 @@ public class Subgraph extends Element
             return (true);
         }
         if (this.graphdict != null) {
-            Enumeration enm = this.graphdict.elements();
-            while (enm.hasMoreElements()) {
-                if (((Subgraph) enm.nextElement()).hasEmptySubgraphs()) {
+            for (Subgraph sg : this.graphdict.values()) {
+                if (sg.hasEmptySubgraphs()) {
                     return (true);
                 }
             }
@@ -1700,8 +1693,6 @@ public class Subgraph extends Element
 
     private Element[] elPatches = null;
 
-    private GrappaBox patch = null;
-
     public void clearPatchWork()
     {
 
@@ -1717,7 +1708,7 @@ public class Subgraph extends Element
             Subgraph sg;
             String style;
             Attribute attr;
-            Enumeration enm = elements(GrappaConstants.SUBGRAPH);
+            Enumeration<Element> enm = elements(GrappaConstants.SUBGRAPH);
             while (enm.hasMoreElements()) {
                 sg = (Subgraph) (enm.nextElement());
                 if (sg != this) {
@@ -1735,7 +1726,7 @@ public class Subgraph extends Element
             Subgraph sg;
             String style;
             Attribute attr;
-            Enumeration enm = elements(GrappaConstants.SUBGRAPH);
+            Enumeration<Element> enm = elements(GrappaConstants.SUBGRAPH);
             while (enm.hasMoreElements()) {
                 sg = (Subgraph) (enm.nextElement());
                 if (sg != this) {
@@ -1777,8 +1768,6 @@ public class Subgraph extends Element
 
     private void combPatchWork()
     {
-
-        Hashtable dict;
         Subgraph sg;
         Element[] patches;
         Element[] elpat;
@@ -1815,29 +1804,21 @@ public class Subgraph extends Element
     {
 
         double total;
-        Enumeration enm;
-        Hashtable dict;
         Object obj;
         int m;
         int n;
-        Subgraph sg;
-        Element el;
         Element[] tmparr;
 
         total = 0;
 
-        dict = this.graphdict; // snapshot
-
         this.sgPatches = null;
 
-        if (dict != null && dict.size() > 0) {
+        if (this.graphdict != null && !this.graphdict.isEmpty()) {
             if (attrname != null) {
-                this.sgPatches = new Element[dict.size()];
+                this.sgPatches = new Element[this.graphdict.size()];
             }
             n = 0;
-            enm = dict.elements();
-            while (enm.hasMoreElements()) {
-                sg = (Subgraph) enm.nextElement();
+            for (Subgraph sg : this.graphdict.values()) {
                 total += sg.prepPatchWork(attrname, mode);
                 if (attrname != null) {
                     this.sgPatches[n++] = sg;
@@ -1845,26 +1826,22 @@ public class Subgraph extends Element
             }
         }
 
-        dict = this.nodedict; // snapshot;
-
         this.elPatches = null;
 
-        if (attrname != null && dict != null && dict.size() > 0) {
+        if (attrname != null && this.nodedict != null && !this.nodedict.isEmpty()) {
             m = 0;
             n = 0;
             if (mode <= 0) {
-                this.elPatches = new Element[dict.size()];
+                this.elPatches = new Element[this.nodedict.size()];
             } else if (this.sgPatches == null) {
-                this.elPatches = new Element[dict.size()];
+                this.elPatches = new Element[this.nodedict.size()];
             } else {
                 n = this.sgPatches.length;
-                this.elPatches = new Element[n + dict.size()];
+                this.elPatches = new Element[n + this.nodedict.size()];
                 System.arraycopy(this.sgPatches, 0, this.elPatches, 0, n);
                 this.sgPatches = null;
             }
-            enm = dict.elements();
-            while (enm.hasMoreElements()) {
-                el = (Element) enm.nextElement();
+            for (Node el : this.nodedict.values()) {
                 if ((obj = el.getAttributeValue(attrname)) != null) {
                     if (obj instanceof Number) {
                         el.setPatchSize(((Number) obj).doubleValue());
@@ -1899,7 +1876,7 @@ public class Subgraph extends Element
 
         setPatchSize(total);
 
-        return (total);
+        return total;
     }
 
     // squarified layout
@@ -1936,7 +1913,6 @@ public class Subgraph extends Element
         double dir;
         java.awt.geom.Rectangle2D.Double box;
         java.awt.geom.Rectangle2D.Double p;
-        java.awt.geom.Rectangle2D.Double pp;
         Element el;
         Attribute attr;
         String style;
@@ -2260,21 +2236,12 @@ public class Subgraph extends Element
     }
 
     // Comparator for patchArea
-
-    public int compare(Object o1, Object o2)
+    @Override
+    public int compare(Element o1, Element o2)
     {
-
-        if (o1 instanceof Element) {
-            if (o2 instanceof Element) {
-                // biggest to smallest
-                double diff = ((Element) o2).getPatchSize() - ((Element) o1).getPatchSize();
-                return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
-            } else {
-                return (0);
-            }
-        } else {
-            return (0);
-        }
+        // biggest to smallest
+        double diff = o2.getPatchSize() - o1.getPatchSize();
+        return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
     }
 
     @Override
@@ -2294,12 +2261,12 @@ public class Subgraph extends Element
      *
      * @return an Enumeration of Node objects
      */
-    public Enumeration nodeElements()
+    public Enumeration<Node> nodeElements()
     {
         if (this.nodedict == null) {
             return Collections.emptyEnumeration();
         }
-        return this.nodedict.elements();
+        return new IteratorEnumeration<>(this.nodedict.values().iterator());
     }
 
     /**
@@ -2307,12 +2274,12 @@ public class Subgraph extends Element
      *
      * @return an Enumeration of Edge objects
      */
-    public Enumeration edgeElements()
+    public Enumeration<Edge> edgeElements()
     {
         if (this.edgedict == null) {
             return Collections.emptyEnumeration();
         }
-        return this.edgedict.elements();
+        return new IteratorEnumeration<>(this.edgedict.values().iterator());
     }
 
     /**
@@ -2320,12 +2287,12 @@ public class Subgraph extends Element
      *
      * @return an Enumeration of Subgraph objects
      */
-    public Enumeration subgraphElements()
+    public Enumeration<Subgraph> subgraphElements()
     {
         if (this.graphdict == null) {
             return Collections.emptyEnumeration();
         }
-        return this.graphdict.elements();
+        return new IteratorEnumeration<>(this.graphdict.values().iterator());
     }
 
     /**
@@ -2363,7 +2330,7 @@ public class Subgraph extends Element
 
         private int types = 0;
 
-        private Enumeration enm = null;
+        private Enumeration<? extends Element> enm = null;
 
         private GraphEnumeration subEnum = null;
 
@@ -2388,7 +2355,7 @@ public class Subgraph extends Element
                     this.subEnum = ((Subgraph) (this.enm.nextElement())).new Enumerator(this.types);
                     if (this.subEnum.hasMoreElements()) {
                         if (this.elem == null) {
-                            this.elem = (Element) this.subEnum.nextElement();
+                            this.elem = this.subEnum.nextElement();
                         }
                         break;
                     }
@@ -2402,12 +2369,12 @@ public class Subgraph extends Element
                 if ((this.types & NODE) != 0 && (this.enm = nodeElements()).hasMoreElements()) {
                     this.dictType = NODE;
                     if (this.elem == null) {
-                        this.elem = (Element) this.enm.nextElement();
+                        this.elem = this.enm.nextElement();
                     }
                 } else if ((this.types & EDGE) != 0 && (this.enm = edgeElements()).hasMoreElements()) {
                     this.dictType = EDGE;
                     if (this.elem == null) {
-                        this.elem = (Element) this.enm.nextElement();
+                        this.elem = this.enm.nextElement();
                     }
                 } else {
                     this.enm = null;
@@ -2415,26 +2382,28 @@ public class Subgraph extends Element
             }
         }
 
+        @Override
         public boolean hasMoreElements()
         {
             return this.elem != null;
         }
 
-        public Object nextElement()
+        @Override
+        public Element nextElement()
         {
             if (this.elem == null) {
                 throw new NoSuchElementException("Subgraph$Enumerator");
             }
             Element el = this.elem;
             if (this.subEnum != null && this.subEnum.hasMoreElements()) {
-                this.elem = (Element) this.subEnum.nextElement();
+                this.elem = this.subEnum.nextElement();
             } else if (this.enm != null && this.enm.hasMoreElements()) {
                 do {
-                    this.elem = (Element) this.enm.nextElement();
+                    this.elem = this.enm.nextElement();
                     if (this.elem.isSubgraph()) {
                         this.subEnum = ((Subgraph) this.elem).new Enumerator(getEnumerationTypes());
                         if (this.subEnum.hasMoreElements()) {
-                            this.elem = (Element) this.subEnum.nextElement();
+                            this.elem = this.subEnum.nextElement();
                             break;
                         } else {
                             this.elem = null;
@@ -2451,10 +2420,10 @@ public class Subgraph extends Element
                     if (this.dictType == SUBGRAPH) {
                         if ((getEnumerationTypes() & NODE) != 0 && (this.enm = nodeElements()).hasMoreElements()) {
                             this.dictType = NODE;
-                            this.elem = (Element) this.enm.nextElement();
+                            this.elem = this.enm.nextElement();
                         } else if ((getEnumerationTypes() & EDGE) != 0 && (this.enm = edgeElements()).hasMoreElements()) {
                             this.dictType = EDGE;
-                            this.elem = (Element) this.enm.nextElement();
+                            this.elem = this.enm.nextElement();
                         } else {
                             this.dictType = 0;
                             this.enm = null;
@@ -2462,7 +2431,7 @@ public class Subgraph extends Element
                     } else if (this.dictType == NODE) {
                         if ((getEnumerationTypes() & EDGE) != 0 && (this.enm = edgeElements()).hasMoreElements()) {
                             this.dictType = EDGE;
-                            this.elem = (Element) this.enm.nextElement();
+                            this.elem = this.enm.nextElement();
                         } else {
                             this.dictType = 0;
                             this.enm = null;
@@ -2476,16 +2445,19 @@ public class Subgraph extends Element
             return el;
         }
 
+        @Override
         public Element nextGraphElement()
         {
-            return (Element) nextElement();
+            return nextElement();
         }
 
+        @Override
         public Subgraph getSubgraphRoot()
         {
             return this.root;
         }
 
+        @Override
         public int getEnumerationTypes()
         {
             return this.types;
@@ -2502,25 +2474,22 @@ public class Subgraph extends Element
      * @see GrappaConstants#EDGE
      * @see GrappaConstants#SUBGRAPH
      */
-    public Vector vectorOfElements(int types)
+    public Vector<Element> vectorOfElements(int types)
     {
-        Vector retVec = new Vector();
+        Vector<Element> retVec = new Vector<>();
         int count = 0;
-        Enumeration elems = null;
         if ((types & NODE) != 0 && this.nodedict != null) {
             count += this.nodedict.size();
             retVec.ensureCapacity(count);
-            elems = this.nodedict.elements();
-            while (elems.hasMoreElements()) {
-                retVec.addElement(elems.nextElement());
+            for (Node n : this.nodedict.values()) {
+                retVec.addElement(n);
             }
         }
         if ((types & EDGE) != 0 && this.edgedict != null) {
             count += this.edgedict.size();
             retVec.ensureCapacity(count);
-            elems = this.edgedict.elements();
-            while (elems.hasMoreElements()) {
-                retVec.addElement(elems.nextElement());
+            for (Edge e : this.edgedict.values()) {
+                retVec.addElement(e);
             }
         }
         if (this.graphdict != null) {
@@ -2528,35 +2497,31 @@ public class Subgraph extends Element
                 count += this.graphdict.size();
                 retVec.ensureCapacity(count);
             }
-            elems = this.graphdict.elements();
-            while (elems.hasMoreElements()) {
-                ((Subgraph) (elems.nextElement())).recurseVectorOfElements(types, retVec, count);
+            for (Subgraph sg : this.graphdict.values()) {
+                sg.recurseVectorOfElements(types, retVec, count);
             }
         }
         return (retVec);
     }
 
     // used above
-    void recurseVectorOfElements(int types, Vector retVec, int count)
+    private void recurseVectorOfElements(int types, Vector<Element> retVec, int count)
     {
         if ((types & SUBGRAPH) != 0) {
             retVec.addElement(this);
         }
-        Enumeration elems = null;
         if ((types & NODE) != 0 && this.nodedict != null) {
             count += this.nodedict.size();
             retVec.ensureCapacity(count);
-            elems = this.nodedict.elements();
-            while (elems.hasMoreElements()) {
-                retVec.addElement(elems.nextElement());
+            for (Node n : this.nodedict.values()) {
+                retVec.addElement(n);
             }
         }
         if ((types & EDGE) != 0 && this.edgedict != null) {
             count += this.edgedict.size();
             retVec.ensureCapacity(count);
-            elems = this.edgedict.elements();
-            while (elems.hasMoreElements()) {
-                retVec.addElement(elems.nextElement());
+            for (Edge e : this.edgedict.values()) {
+                retVec.addElement(e);
             }
         }
         if (this.graphdict != null) {
@@ -2564,9 +2529,8 @@ public class Subgraph extends Element
                 count += this.graphdict.size();
                 retVec.ensureCapacity(count);
             }
-            elems = this.graphdict.elements();
-            while (elems.hasMoreElements()) {
-                ((Subgraph) (elems.nextElement())).recurseVectorOfElements(types, retVec, count);
+            for (Subgraph sg : this.graphdict.values()) {
+                sg.recurseVectorOfElements(types, retVec, count);
             }
         }
     }
