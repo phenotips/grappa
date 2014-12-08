@@ -85,12 +85,14 @@ public class GrappaPathIterator implements PathIterator
     //
     // //////////////////////////////////////////////////////////////////////
 
+    @Override
     public int currentSegment(double[] coords)
     {
         System.arraycopy(this.pts, 0, coords, 0, 6);
         return (this.type);
     }
 
+    @Override
     public int currentSegment(float[] coords)
     {
         coords[0] = (float) this.pts[0];
@@ -105,17 +107,20 @@ public class GrappaPathIterator implements PathIterator
     /**
      * Return the winding rule for determining the interior of the path.
      */
+    @Override
     public int getWindingRule()
     {
         return (this.grappaNexus.getWindingRule());
     }
 
+    @Override
     public boolean isDone()
     {
         return ((this.shapeIterator == null || this.shapeIterator.isDone())
-        && (this.areaIterator == null || this.areaIterator.isDone()));
+            && (this.areaIterator == null || this.areaIterator.isDone()));
     }
 
+    @Override
     public void next()
     {
         if (this.shapeIterator != null) {

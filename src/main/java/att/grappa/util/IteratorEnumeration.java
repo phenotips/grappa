@@ -18,11 +18,13 @@ public class IteratorEnumeration<E> implements Enumeration<E>
         this.iterator = iterator;
     }
 
+    @Override
     public boolean hasMoreElements()
     {
         return this.iterator.hasNext();
     }
 
+    @Override
     public E nextElement()
     {
         return this.iterator.next();

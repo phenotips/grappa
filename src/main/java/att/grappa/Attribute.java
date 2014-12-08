@@ -425,7 +425,8 @@ public final class Attribute extends java.util.Observable implements AttributeHa
             case HASHLIST_TYPE:
                 if (value instanceof Hashtable) {
                     StringBuilder strbuf = new StringBuilder();
-                    Enumeration<String> keys = ((Hashtable) value).keys();
+                    @SuppressWarnings("unchecked")
+                    Enumeration<String> keys = ((Hashtable<String, String>) value).keys();
                     synchronized (strbuf) {
                         while (keys.hasMoreElements()) {
                             if (strbuf.length() > 0) {
@@ -466,7 +467,7 @@ public final class Attribute extends java.util.Observable implements AttributeHa
                 break;
             case SHAPE_TYPE:
                 if (value instanceof Integer) {
-                    stringValue = (String) Grappa.shapeToKey.get(value);
+                    stringValue = Grappa.shapeToKey.get(value);
                 } else {
                     throw new IllegalArgumentException("value of attribute \"" + name
                         + "\" is not an instance of Integer");
@@ -570,12 +571,12 @@ public final class Attribute extends java.util.Observable implements AttributeHa
                         // does this introduce the danger of users being
                         // tempted to hold on to the value??
                         value = this.value;
-                        ((Hashtable) value).clear();
+                        ((Hashtable<String, String>) value).clear();
                     } else {
                         value = new Hashtable();
                     }
                     for (String listval : listvals) {
-                        ((Hashtable) value).put(listval, listval);
+                        ((Hashtable<String, String>) value).put(listval, listval);
                     }
                     break;
                 case INTEGER_TYPE:
@@ -664,6 +665,7 @@ public final class Attribute extends java.util.Observable implements AttributeHa
             case COLOR_LIST_TYPE:
                 if (value instanceof List) {
                     /* We don't copy the color as this isn't done for COLOR_TYPE either */
+                    @SuppressWarnings("unchecked")
                     List<java.awt.Color> valueList = (List<java.awt.Color>) value;
                     List<java.awt.Color> newList = new ArrayList<java.awt.Color>(valueList.size());
                     for (java.awt.Color c : valueList) {
@@ -702,7 +704,7 @@ public final class Attribute extends java.util.Observable implements AttributeHa
                 break;
             case HASHLIST_TYPE:
                 if (value instanceof Hashtable) {
-                    copy_value = ((Hashtable) value).clone();
+                    copy_value = ((Hashtable<String, String>) value).clone();
                 } else {
                     throw new IllegalArgumentException("value of attribute \"" + name
                         + "\" is not an instance of Integer");

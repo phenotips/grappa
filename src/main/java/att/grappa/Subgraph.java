@@ -1471,7 +1471,7 @@ public class Subgraph extends Element implements Comparator<Element>
     public boolean hasTypeTag(int type, String tag)
     {
         Attribute attr = null;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         switch (type) {
             case NODE:
                 attr = getNodeAttribute(TAG_ATTR);
@@ -1486,7 +1486,7 @@ public class Subgraph extends Element implements Comparator<Element>
         if (attr == null) {
             return false;
         }
-        tags = (Hashtable) (attr.getValue());
+        tags = (Hashtable<String, String>) (attr.getValue());
         if (tags == null || tags.size() == 0) {
             return false;
         }
@@ -1532,7 +1532,7 @@ public class Subgraph extends Element implements Comparator<Element>
     public void removeTypeTags(int type)
     {
         Attribute attr = null;
-        Hashtable tags;
+        Hashtable<String, String> tags;
         switch (type) {
             case NODE:
                 attr = getNodeAttribute(TAG_ATTR);

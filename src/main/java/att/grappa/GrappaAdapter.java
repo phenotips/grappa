@@ -74,6 +74,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                                 if (subg.currentSelection instanceof Element) {
                                     ((Element) (subg.currentSelection)).highlight &= ~HIGHLIGHT_MASK;
                                 } else {
+                                    @SuppressWarnings("unchecked")
                                     Vector<Element> vec = ((Vector<Element>) (subg.currentSelection));
                                     for (int i = 0; i < vec.size(); i++) {
                                         vec.elementAt(i).highlight &= ~HIGHLIGHT_MASK;
@@ -90,6 +91,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                                 if (subg.currentSelection instanceof Element) {
                                     ((Element) (subg.currentSelection)).highlight &= ~HIGHLIGHT_MASK;
                                 } else {
+                                    @SuppressWarnings("unchecked")
                                     Vector<Element> vec = ((Vector<Element>) (subg.currentSelection));
                                     for (int i = 0; i < vec.size(); i++) {
                                         vec.elementAt(i).highlight &= ~HIGHLIGHT_MASK;
@@ -117,6 +119,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                                     }
                                     subg.currentSelection = null;
                                 } else {
+                                    @SuppressWarnings("unchecked")
                                     Vector<Element> vec = ((Vector<Element>) (subg.currentSelection));
                                     boolean problem = true;
                                     for (int i = 0; i < vec.size(); i++) {
@@ -473,6 +476,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                         if (subg.currentSelection instanceof Element) {
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), DELETION_MASK, HIGHLIGHT_OFF);
                         } else {
+                            @SuppressWarnings("unchecked")
                             Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
                                 GrappaSupport.setHighlight(vec.elementAt(i), DELETION_MASK, HIGHLIGHT_OFF);
@@ -486,6 +490,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                         if (subg.currentSelection instanceof Element) {
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), 0, HIGHLIGHT_OFF);
                         } else {
+                            @SuppressWarnings("unchecked")
                             Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
                                 GrappaSupport.setHighlight(vec.elementAt(i), 0, HIGHLIGHT_OFF);
@@ -528,6 +533,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), 0, HIGHLIGHT_OFF);
                             ((Element) (subg.currentSelection)).setSubgraph(newsubg);
                         } else {
+                            @SuppressWarnings("unchecked")
                             Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
                                 GrappaSupport.setHighlight(vec.elementAt(i), 0, HIGHLIGHT_OFF);
@@ -546,6 +552,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                         if (subg.currentSelection instanceof Element) {
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), DELETION_MASK, HIGHLIGHT_ON);
                         } else {
+                            @SuppressWarnings("unchecked")
                             Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
                                 GrappaSupport.setHighlight(vec.elementAt(i), DELETION_MASK, HIGHLIGHT_ON);
@@ -559,6 +566,7 @@ public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionLis
                         if (subg.currentSelection instanceof Element) {
                             ((Element) (subg.currentSelection)).delete();
                         } else {
+                            @SuppressWarnings("unchecked")
                             Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
                                 vec.elementAt(i).delete();
