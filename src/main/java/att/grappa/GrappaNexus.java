@@ -278,9 +278,9 @@ public class GrappaNexus
                             throw new IllegalArgumentException("custom attibuted null for node (" + node.getName()
                                 + ") with custom shape");
                         }
-                        Class custom_class;
+                        Class<? extends Shape> custom_class;
                         try {
-                            custom_class = Class.forName(custom);
+                            custom_class = (Class<? extends Shape>) Class.forName(custom);
                         } catch (Exception e) {
                             throw new IllegalArgumentException("custom class unavailable for custom shape '" + custom
                                 + "'");
@@ -289,11 +289,10 @@ public class GrappaNexus
                             throw new IllegalArgumentException("custom class '" + custom
                                 + "' does not extend the GrappaShape class");
                         }
-                        Constructor ccustom;
+                        Constructor<? extends Shape> ccustom;
                         try {
-                            ccustom =
-                                custom_class.getConstructor(new Class[] { Element.class, double.class, double.class,
-                                double.class, double.class });
+                            ccustom = custom_class.getConstructor(
+                                new Class[] { Element.class, double.class, double.class, double.class, double.class });
                         } catch (Exception e) {
                             throw new IllegalArgumentException("constructor for custom class shape '" + custom
                                 + "' not found");
@@ -301,14 +300,12 @@ public class GrappaNexus
                         try {
                             if (Grappa.centerPointNodes) {
                                 this.shape =
-                                    (Shape) (this.custom_shape =
-                                        ccustom.newInstance(new Object[] { node, new Double(pos.x - (width / 2.0)),
-                                        new Double(pos.y - (height / 2.0)), new Double(width), new Double(height) }));
+                                    ccustom.newInstance(new Object[] { node, new Double(pos.x - (width / 2.0)),
+                                        new Double(pos.y - (height / 2.0)), new Double(width), new Double(height) });
                             } else {
                                 this.shape =
-                                    (Shape) (this.custom_shape =
-                                        ccustom.newInstance(new Object[] { node, new Double(pos.x), new Double(pos.y),
-                                        new Double(width), new Double(height) }));
+                                    ccustom.newInstance(new Object[] { node, new Double(pos.x), new Double(pos.y),
+                                        new Double(width), new Double(height) });
                             }
                         } catch (Exception e) {
                             if (e instanceof InvocationTargetException) {

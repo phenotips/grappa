@@ -10,6 +10,9 @@
 
 package att.grappa;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 /**
  * This class sets default option variables and other set-up. In addition, some convenience methods for exception
  * display are included and some lookup tables are initialized.
@@ -48,12 +51,12 @@ public abstract class Grappa
     /**
      * Look-up table that maps a shape name to its integer reference value.
      */
-    public static java.util.Hashtable keyToShape = new java.util.Hashtable();
+    public static Hashtable<String, Integer> keyToShape = new Hashtable<>();
 
     /**
      * Look-up table that maps a shape reference value to its name.
      */
-    public static java.util.Hashtable shapeToKey = new java.util.Hashtable();
+    public static Hashtable<Integer, String> shapeToKey = new Hashtable<>();
 
     /*
      * Set-up lookup table that defines recognized shapes (useful for switch statements).
@@ -88,10 +91,10 @@ public abstract class Grappa
         keyToShape.put("Mrecord", new Integer(MRECORD_SHAPE));
         keyToShape.put("Msquare", new Integer(MSQUARE_SHAPE));
 
-        java.util.Enumeration enm = keyToShape.keys();
+        Enumeration<String> enm = keyToShape.keys();
         String key = null;
         while (enm.hasMoreElements()) {
-            key = (String) enm.nextElement();
+            key = enm.nextElement();
             shapeToKey.put(keyToShape.get(key), key);
         }
 

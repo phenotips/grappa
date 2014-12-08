@@ -78,9 +78,9 @@ public class Lexer
     /**
      * hash tables to hold symbols
      */
-    private Hashtable keywords = new Hashtable(32);
+    private Hashtable<String, Integer> keywords = new Hashtable<>(32);
 
-    private Hashtable char_symbols = new Hashtable(32);
+    private Hashtable<Integer, Integer> char_symbols = new Hashtable<>(32);
 
     private Reader inReader;
 
@@ -289,7 +289,7 @@ public class Lexer
     {
         Integer result;
 
-        result = (Integer) this.char_symbols.get(new Integer((char) ch));
+        result = this.char_symbols.get(new Integer((char) ch));
         if (result == null) {
             return -1;
         } else {
@@ -453,7 +453,7 @@ public class Lexer
             result_str = this.cmnstrbuf.toString();
         }
 
-        keyword_num = (Integer) this.keywords.get(result_str);
+        keyword_num = this.keywords.get(result_str);
 
         // if we found something, return that keyword
         if (keyword_num != null) {

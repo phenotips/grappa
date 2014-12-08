@@ -427,13 +427,13 @@ public final class Attribute extends java.util.Observable
             case HASHLIST_TYPE:
                 if (value instanceof Hashtable) {
                     StringBuilder strbuf = new StringBuilder();
-                    Enumeration keys = ((Hashtable) value).keys();
+                    Enumeration<String> keys = ((Hashtable) value).keys();
                     synchronized (strbuf) {
                         while (keys.hasMoreElements()) {
                             if (strbuf.length() > 0) {
                                 strbuf.append(',');
                             }
-                            strbuf.append((String) (keys.nextElement()));
+                            strbuf.append(keys.nextElement());
                         }
                         stringValue = strbuf.toString();
                     }

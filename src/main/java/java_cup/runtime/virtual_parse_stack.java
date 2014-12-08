@@ -22,7 +22,7 @@ public class virtual_parse_stack
     /*-----------------------------------------------------------*/
 
     /** Constructor to build a virtual stack out of a real stack. */
-    public virtual_parse_stack(Stack shadowing_stack) throws java.lang.Exception
+    public virtual_parse_stack(Stack<Symbol> shadowing_stack) throws java.lang.Exception
     {
         /* sanity check */
         if (shadowing_stack == null) {
@@ -32,7 +32,7 @@ public class virtual_parse_stack
 
         /* set up our internals */
         this.real_stack = shadowing_stack;
-        this.vstack = new Stack();
+        this.vstack = new Stack<>();
         this.real_next = 0;
 
         /* get one element onto the virtual portion of the stack */
@@ -47,7 +47,7 @@ public class virtual_parse_stack
      * The real stack that we shadow. This is accessed when we move off the bottom of the virtual portion of the stack,
      * but is always left unmodified.
      */
-    protected Stack real_stack;
+    protected Stack<Symbol> real_stack;
 
     /* . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
 
@@ -64,7 +64,7 @@ public class virtual_parse_stack
      * the top portion of the real stack within the area that has been modified (via operations on the virtual stack).
      * When this portion of the stack becomes empty we transfer elements from the underlying stack onto this stack.
      */
-    protected Stack vstack;
+    protected Stack<Integer> vstack;
 
     /*-----------------------------------------------------------*/
     /*--- General Methods ---------------------------------------*/
@@ -83,7 +83,7 @@ public class virtual_parse_stack
         }
 
         /* get a copy of the first Symbol we have not transfered */
-        stack_sym = (Symbol) this.real_stack.elementAt(this.real_stack.size() - 1 - this.real_next);
+        stack_sym = this.real_stack.elementAt(this.real_stack.size() - 1 - this.real_next);
 
         /* record the transfer */
         this.real_next++;
@@ -113,7 +113,7 @@ public class virtual_parse_stack
                 "Internal parser error: top() called on empty virtual stack");
         }
 
-        return ((Integer) this.vstack.peek()).intValue();
+        return this.vstack.peek().intValue();
     }
 
     /* . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */

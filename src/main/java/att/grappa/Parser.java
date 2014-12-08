@@ -238,7 +238,7 @@ public class Parser extends java_cup.runtime.lr_parser
     public java_cup.runtime.Symbol do_action(
         int act_num,
         java_cup.runtime.lr_parser parser,
-        java.util.Stack stack,
+        java.util.Stack<Symbol> stack,
         int top)
         throws java.lang.Exception
     {
@@ -521,7 +521,7 @@ public class Parser extends java_cup.runtime.lr_parser
             /* current state is always on the top of the stack */
 
             /* look up action out of the current state with the current input */
-            act = get_action(((Symbol) this.stack.peek()).parse_state, this.cur_token.sym);
+            act = get_action(this.stack.peek().parse_state, this.cur_token.sym);
 
             /* decode the action -- > 0 encodes shift */
             if (act > 0)
@@ -556,7 +556,7 @@ public class Parser extends java_cup.runtime.lr_parser
                 }
 
                 /* look up the state to go to from the one popped back to */
-                act = get_reduce(((Symbol) this.stack.peek()).parse_state, lhs_sym_num);
+                act = get_reduce(this.stack.peek().parse_state, lhs_sym_num);
 
                 /* shift to that state */
                 lhs_sym.parse_state = act;
@@ -580,7 +580,7 @@ public class Parser extends java_cup.runtime.lr_parser
                     /* just in case that wasn't fatal enough, end parse */
                     done_parsing();
                 } else {
-                    lhs_sym = (Symbol) this.stack.peek();
+                    lhs_sym = this.stack.peek();
                 }
             }
         }
@@ -642,11 +642,11 @@ class CUP$Parser$actions
 
     private int anon_id = 0;
 
-    Vector attrs = new Vector(8, 4);
+    Vector<Attribute> attrs = new Vector<>(8, 4);
 
-    Vector nodes = new Vector(8, 4);
+    Vector<Object[]> nodes = new Vector<>(8, 4);
 
-    Vector edges = new Vector(8, 4);
+    Vector<Object[]> edges = new Vector<>(8, 4);
 
     void appendAttr(String name, String value)
     {
@@ -669,7 +669,7 @@ class CUP$Parser$actions
         }
         Attribute attr = null;
         for (int i = 0; i < this.attrs.size(); i++) {
-            if ((attr = (Attribute) (this.attrs.elementAt(i))).getValue() == null) {
+            if ((attr = this.attrs.elementAt(i)).getValue() == null) {
                 // null means to not attach the attribute to an element
                 continue;
             } else {
@@ -774,7 +774,7 @@ class CUP$Parser$actions
         Object[] pair = null;
         if (this.nodes.size() > 0 && this.attrs.size() > 0) {
             for (int i = 0; i < this.nodes.size(); i++) {
-                pair = (Object[]) (this.nodes.elementAt(i));
+                pair = this.nodes.elementAt(i);
                 applyAttrs((Element) pair[0], null, null);
             }
         }
@@ -787,7 +787,7 @@ class CUP$Parser$actions
         Object[] pair = new Object[2];
         if (this.nodes.size() > 0) {
             pair[0] = this.nodes;
-            this.nodes = new Vector(8, 4);
+            this.nodes = new Vector<>(8, 4);
             pair[1] = new Boolean(true);
         } else if (this.lastSubgraph != null) {
             pair[0] = this.lastSubgraph;
@@ -808,7 +808,7 @@ class CUP$Parser$actions
         Attribute attr = null;
         int skip = -1;
         for (int i = 0; i < this.attrs.size(); i++) {
-            attr = (Attribute) (this.attrs.elementAt(i));
+            attr = this.attrs.elementAt(i);
             if (attr.getName().equals("key")) {
                 key = attr;
                 if (name != null) {
@@ -821,23 +821,23 @@ class CUP$Parser$actions
                 }
             }
         }
-        Object[] tailPair = (Object[]) (this.edges.elementAt(0));
+        Object[] tailPair = this.edges.elementAt(0);
         Object[] headPair = null;
         // note: when node list is used, a non-null name will cause errors
         // due to lack of uniqueness
         for (int i = 1; i < this.edges.size(); i++) {
-            headPair = (Object[]) (this.edges.elementAt(i));
+            headPair = this.edges.elementAt(i);
             if (((Boolean) (tailPair[1])).booleanValue()) { // true if node list
-                Vector list = (Vector) (tailPair[0]);
+                Vector<Object[]> list = (Vector<Object[]>) tailPair[0];
                 Object[] nodePair = null;
                 for (int j = 0; j < list.size(); j++) {
-                    nodePair = (Object[]) (list.elementAt(j));
+                    nodePair = list.elementAt(j);
                     edgeRHS((Node) (nodePair[0]), (String) (nodePair[1]), headPair, key, name);
                 }
                 list.removeAllElements();
             } else {
                 Subgraph subg = (Subgraph) (tailPair[0]);
-                Enumeration enm = subg.elements(GrappaConstants.NODE);
+                Enumeration<Element> enm = subg.elements(GrappaConstants.NODE);
                 while (enm.hasMoreElements()) {
                     edgeRHS((Node) (enm.nextElement()), null, headPair, key, name);
                 }
@@ -853,10 +853,10 @@ class CUP$Parser$actions
         String key = (keyAttr == null) ? null : keyAttr.getStringValue();
         String name = (nameAttr == null) ? null : nameAttr.getStringValue();
         if (((Boolean) (headPair[1])).booleanValue()) { // true if node list
-            Vector list = (Vector) (headPair[0]);
+            Vector<Object[]> list = (Vector<Object[]>) (headPair[0]);
             Object[] nodePair = null;
             for (int j = 0; j < list.size(); j++) {
-                nodePair = (Object[]) (list.elementAt(j));
+                nodePair = list.elementAt(j);
                 this.thisEdge =
                     new Edge(this.thisGraph, tail, tailPort, (Node) (nodePair[0]), (String) (nodePair[1]), key, name);
                 this.parser.debug_message(1, "Creating edge in subgraph (" + this.thisGraph.getName() + ")...");
@@ -866,7 +866,7 @@ class CUP$Parser$actions
             }
         } else {
             Subgraph subg = (Subgraph) (headPair[0]);
-            Enumeration enm = subg.elements(GrappaConstants.NODE);
+            Enumeration<Element> enm = subg.elements(GrappaConstants.NODE);
             while (enm.hasMoreElements()) {
                 this.thisEdge = new Edge(this.thisGraph, tail, tailPort, (Node) (enm.nextElement()), null, key, name);
                 this.parser.debug_message(1, "Creating edge in subgraph (" + this.thisGraph.getName() + ")...");
@@ -881,7 +881,7 @@ class CUP$Parser$actions
     {
         Attribute attr = null;
         for (int i = 0; i < this.attrs.size(); i++) {
-            attr = (Attribute) this.attrs.elementAt(i);
+            attr = this.attrs.elementAt(i);
             if (attr == skip1) {
                 continue;
             } else if (attr == skip2) {
@@ -903,7 +903,7 @@ class CUP$Parser$actions
     public final java_cup.runtime.Symbol CUP$Parser$do_action(
         int CUP$Parser$act_num,
         java_cup.runtime.lr_parser CUP$Parser$parser,
-        java.util.Stack CUP$Parser$stack,
+        java.util.Stack<Symbol> CUP$Parser$stack,
         int CUP$Parser$top)
         throws java.lang.Exception
     {
@@ -920,8 +920,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(17/* optSeparator */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -932,8 +932,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(17/* optSeparator */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -944,8 +944,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(17/* optSeparator */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -956,8 +956,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(16/* optSemi */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -968,8 +968,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(16/* optSemi */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -982,8 +982,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(5/* optSubgHdr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -996,8 +996,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(5/* optSubgHdr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1007,14 +1007,14 @@ class CUP$Parser$actions
                 String RESULT = null;
                 int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
                 int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String val = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = val;
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(5/* optSubgHdr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1023,19 +1023,19 @@ class CUP$Parser$actions
             {
                 Object RESULT = null;
                 // propagate RESULT from NT$2
-                if (((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value != null) {
-                    RESULT = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
+                if (CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value != null) {
+                    RESULT = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
                 }
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).right;
-                String val = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
+                String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
 
                 closeSubg();
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(22/* subgraph */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1043,16 +1043,16 @@ class CUP$Parser$actions
             case 53: // NT$2 ::=
             {
                 Object RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String val = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 openSubg(val);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(34/* NT$2 */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1063,8 +1063,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(25/* graphAttrDefs */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1072,16 +1072,16 @@ class CUP$Parser$actions
             case 51: // attrMacro ::= ATSIGN ATOM
             {
                 Object RESULT = null;
-                int nameleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int nameright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String name = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 appendAttr(name, null);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(30/* attrMacro */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1089,20 +1089,20 @@ class CUP$Parser$actions
             case 50: // attrAssignment ::= ATOM EQUAL ATOM
             {
                 Object RESULT = null;
-                int nameleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left;
-                int nameright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).right;
-                String name = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).value;
-                int valueleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valueright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
+                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
+                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
+                String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
+                int valueleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valueright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String value =
-                    (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                    (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 appendAttr(name, value);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(29/* attrAssignment */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1113,8 +1113,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(28/* attrItem */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1125,8 +1125,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(28/* attrItem */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1137,8 +1137,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(27/* attrDefs */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1149,8 +1149,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(27/* attrDefs */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1161,8 +1161,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(26/* optAttrDefs */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1173,8 +1173,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(26/* optAttrDefs */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1185,8 +1185,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(24/* attrList */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 3)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 3).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1197,8 +1197,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(20/* optAttr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1209,8 +1209,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(20/* optAttr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1223,8 +1223,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(7/* optMacroName */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1232,16 +1232,16 @@ class CUP$Parser$actions
             case 39: // optMacroName ::= ATOM EQUAL
             {
                 String RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).right;
-                String val = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
+                String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
 
                 RESULT = val;
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(7/* optMacroName */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1249,17 +1249,16 @@ class CUP$Parser$actions
             case 38: // attrType ::= EDGE
             {
                 Integer RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                Integer val =
-                    (Integer) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                Integer val = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = new Integer(GrappaConstants.EDGE);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(4/* attrType */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1267,17 +1266,16 @@ class CUP$Parser$actions
             case 37: // attrType ::= NODE
             {
                 Integer RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                Integer val =
-                    (Integer) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                Integer val = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = new Integer(GrappaConstants.NODE);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(4/* attrType */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1285,17 +1283,16 @@ class CUP$Parser$actions
             case 36: // attrType ::= GRAPH
             {
                 Integer RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                Integer val =
-                    (Integer) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                Integer val = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = new Integer(GrappaConstants.SUBGRAPH);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(4/* attrType */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1308,8 +1305,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(15/* attrStmt */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1317,20 +1314,19 @@ class CUP$Parser$actions
             case 34: // attrStmt ::= attrType optMacroName attrList
             {
                 Object RESULT = null;
-                int typeleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left;
-                int typeright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).right;
-                Integer type =
-                    (Integer) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).value;
-                int nameleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left;
-                int nameright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).right;
-                String name = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
+                int typeleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
+                int typeright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
+                Integer type = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
+                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
+                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
+                String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
 
                 attrStmt(type.intValue(), name);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(15/* attrStmt */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1343,8 +1339,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(8/* optPort */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1352,16 +1348,16 @@ class CUP$Parser$actions
             case 32: // optPort ::= COLON ATOM
             {
                 String RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String val = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
+                String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = val;
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(8/* optPort */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1369,19 +1365,19 @@ class CUP$Parser$actions
             case 31: // node ::= ATOM optPort
             {
                 Object RESULT = null;
-                int nameleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left;
-                int nameright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).right;
-                String name = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
-                int portleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int portright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String port = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
+                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
+                String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
+                int portleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int portright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                String port = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 appendNode(name, port);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(23/* node */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1392,8 +1388,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(21/* nodeList */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1404,8 +1400,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(21/* nodeList */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1419,8 +1415,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(3/* rCompound */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1429,21 +1425,20 @@ class CUP$Parser$actions
             {
                 Boolean RESULT = null;
                 // propagate RESULT from NT$1
-                if (((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).value != null) {
-                    RESULT = (Boolean) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).value;
+                if (CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value != null) {
+                    RESULT = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
                 }
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                Boolean val =
-                    (Boolean) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                Boolean val = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 this.thisElemType = GrappaConstants.EDGE;
                 RESULT = new Boolean(true);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(3/* rCompound */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 3)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 3).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1457,8 +1452,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(33/* NT$1 */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1474,8 +1469,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(31/* edge_op */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1491,8 +1486,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(31/* edge_op */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1503,8 +1498,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(19/* simple */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1515,8 +1510,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(19/* simple */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1524,10 +1519,10 @@ class CUP$Parser$actions
             case 21: // compound ::= simple rCompound optAttr
             {
                 Object RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).right;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
                 Boolean val =
-                    (Boolean) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
+                    (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
 
                 if (val.booleanValue()) {
                     edgeWrap();
@@ -1537,8 +1532,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(18/* compound */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1549,8 +1544,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(14/* stmt */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1561,8 +1556,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(14/* stmt */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1573,8 +1568,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(13/* stmtList */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1585,8 +1580,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(13/* stmtList */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1597,8 +1592,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(12/* optStmtList */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1609,8 +1604,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(12/* optStmtList */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1621,8 +1616,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(11/* body */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1635,8 +1630,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(6/* optGraphName */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1644,16 +1639,16 @@ class CUP$Parser$actions
             case 12: // optGraphName ::= ATOM
             {
                 String RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String val = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = val;
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(6/* optGraphName */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1666,8 +1661,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(2/* graphType */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1680,8 +1675,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(2/* graphType */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1694,8 +1689,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(1/* optStrict */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1708,8 +1703,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(1/* optStrict */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1717,16 +1712,16 @@ class CUP$Parser$actions
             case 7: // hdr ::= STRICTDIGRAPH optGraphName
             {
                 Object RESULT = null;
-                int nameleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int nameright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String name = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 startGraph(name, true, true);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(10/* hdr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1734,16 +1729,16 @@ class CUP$Parser$actions
             case 6: // hdr ::= STRICTGRAPH optGraphName
             {
                 Object RESULT = null;
-                int nameleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int nameright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String name = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 startGraph(name, true, false);
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(10/* hdr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1751,24 +1746,22 @@ class CUP$Parser$actions
             case 5: // hdr ::= optStrict graphType optGraphName
             {
                 Object RESULT = null;
-                int strictleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left;
-                int strictright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).right;
-                Boolean strict =
-                    (Boolean) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).value;
-                int typeleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left;
-                int typeright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).right;
-                Boolean type =
-                    (Boolean) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
-                int nameleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int nameright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                String name = (String) ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int strictleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
+                int strictright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
+                Boolean strict = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
+                int typeleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
+                int typeright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
+                Boolean type = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
+                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 startGraph(name, type.booleanValue(), strict.booleanValue());
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(10/* hdr */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1783,8 +1776,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(9/* graph */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1792,9 +1785,9 @@ class CUP$Parser$actions
             case 3: // graph ::= error
             {
                 Object RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
-                Object val = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).value;
+                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
+                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
+                Object val = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 // CUP$parser.report_error ("An error was encountered while graph parsing (" + val.toString() + ").",
                 // null);
@@ -1803,8 +1796,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(9/* graph */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1813,16 +1806,16 @@ class CUP$Parser$actions
             {
                 Object RESULT = null;
                 // propagate RESULT from NT$0
-                if (((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value != null) {
-                    RESULT = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
+                if (CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value != null) {
+                    RESULT = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
                 }
 
                 closeGraph();
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(9/* graph */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 2)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1835,8 +1828,8 @@ class CUP$Parser$actions
 
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(32/* NT$0 */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 return CUP$Parser$result;
 
@@ -1844,15 +1837,14 @@ class CUP$Parser$actions
             case 0: // $START ::= graph EOF
             {
                 Object RESULT = null;
-                int start_valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left;
-                int start_valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).right;
-                Object start_val =
-                    ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).value;
+                int start_valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
+                int start_valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
+                Object start_val = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
                 RESULT = start_val;
                 CUP$Parser$result =
                     new java_cup.runtime.Symbol(0/* $START */,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 1)).left,
-                        ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right, RESULT);
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left,
+                        CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right, RESULT);
             }
                 /* ACCEPT */
                 CUP$Parser$parser.done_parsing();

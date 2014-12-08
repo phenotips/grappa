@@ -592,7 +592,7 @@ public abstract class GrappaSupport
         if (box.contains(bb)) {
             return subg.vectorOfElements(GrappaConstants.SUBGRAPH | GrappaConstants.NODE | GrappaConstants.EDGE);
         } else if (box.intersects(bb)) {
-            Enumeration enm;
+            Enumeration<? extends Element> enm;
             Vector subelems = null;
 
             enm = subg.subgraphElements();

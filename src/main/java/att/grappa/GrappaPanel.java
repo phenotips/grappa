@@ -75,7 +75,7 @@ public class GrappaPanel extends javax.swing.JPanel
 
     AffineTransform inverseTransform = null;
 
-    Vector elementVector = null;
+    Vector<Element> elementVector = null;
 
     int nextElement = -1;
 
@@ -795,7 +795,7 @@ public class GrappaPanel extends javax.swing.JPanel
 
         if (bbox != null && grappaNexus != null && subg.visible && !grappaNexus.style.invis && clipper.intersects(bbox)) {
 
-            Enumeration enm = null;
+            Enumeration<? extends Element> enm = null;
 
             int i;
 
@@ -1010,7 +1010,7 @@ public class GrappaPanel extends javax.swing.JPanel
     private Element reallyFindContainingElement(Subgraph subg, Point2D pt, Element[] stash)
     {
 
-        Enumeration enm;
+        Enumeration<? extends Element> enm;
 
         Rectangle2D bb = subg.getBoundingBox();
 

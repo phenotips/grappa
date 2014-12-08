@@ -74,9 +74,9 @@ public class GrappaAdapter
                                 if (subg.currentSelection instanceof Element) {
                                     ((Element) (subg.currentSelection)).highlight &= ~HIGHLIGHT_MASK;
                                 } else {
-                                    Vector vec = ((Vector) (subg.currentSelection));
+                                    Vector<Element> vec = ((Vector<Element>) (subg.currentSelection));
                                     for (int i = 0; i < vec.size(); i++) {
-                                        ((Element) (vec.elementAt(i))).highlight &= ~HIGHLIGHT_MASK;
+                                        vec.elementAt(i).highlight &= ~HIGHLIGHT_MASK;
                                     }
                                 }
                                 subg.currentSelection = null;
@@ -90,9 +90,9 @@ public class GrappaAdapter
                                 if (subg.currentSelection instanceof Element) {
                                     ((Element) (subg.currentSelection)).highlight &= ~HIGHLIGHT_MASK;
                                 } else {
-                                    Vector vec = ((Vector) (subg.currentSelection));
+                                    Vector<Element> vec = ((Vector<Element>) (subg.currentSelection));
                                     for (int i = 0; i < vec.size(); i++) {
-                                        ((Element) (vec.elementAt(i))).highlight &= ~HIGHLIGHT_MASK;
+                                        vec.elementAt(i).highlight &= ~HIGHLIGHT_MASK;
                                     }
                                 }
                                 subg.currentSelection = null;
@@ -117,10 +117,10 @@ public class GrappaAdapter
                                     }
                                     subg.currentSelection = null;
                                 } else {
-                                    Vector vec = ((Vector) (subg.currentSelection));
+                                    Vector<Element> vec = ((Vector<Element>) (subg.currentSelection));
                                     boolean problem = true;
                                     for (int i = 0; i < vec.size(); i++) {
-                                        if (((Element) (vec.elementAt(i))) == elem) {
+                                        if (vec.elementAt(i) == elem) {
                                             vec.removeElementAt(i);
                                             problem = false;
                                             break;
@@ -468,9 +468,9 @@ public class GrappaAdapter
                         if (subg.currentSelection instanceof Element) {
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), DELETION_MASK, HIGHLIGHT_OFF);
                         } else {
-                            Vector vec = (Vector) (subg.currentSelection);
+                            Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
-                                GrappaSupport.setHighlight((Element) (vec.elementAt(i)), DELETION_MASK, HIGHLIGHT_OFF);
+                                GrappaSupport.setHighlight(vec.elementAt(i), DELETION_MASK, HIGHLIGHT_OFF);
                             }
                         }
                         subg.getGraph().repaint();
@@ -481,9 +481,9 @@ public class GrappaAdapter
                         if (subg.currentSelection instanceof Element) {
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), 0, HIGHLIGHT_OFF);
                         } else {
-                            Vector vec = (Vector) (subg.currentSelection);
+                            Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
-                                GrappaSupport.setHighlight((Element) (vec.elementAt(i)), 0, HIGHLIGHT_OFF);
+                                GrappaSupport.setHighlight(vec.elementAt(i), 0, HIGHLIGHT_OFF);
                             }
                         }
                         subg.currentSelection = null;
@@ -500,8 +500,8 @@ public class GrappaAdapter
                             return;
                         }
                         ((Element) (subg.currentSelection)).highlight &= ~HIGHLIGHT_MASK;
-                        Vector elems = new Vector();
-                        Enumeration enm = ((Subgraph) elem).nodeElements();
+                        Vector<Element> elems = new Vector<>();
+                        Enumeration<? extends Element> enm = ((Subgraph) elem).nodeElements();
                         while (enm.hasMoreElements()) {
                             elems.add(enm.nextElement());
                         }
@@ -523,13 +523,13 @@ public class GrappaAdapter
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), 0, HIGHLIGHT_OFF);
                             ((Element) (subg.currentSelection)).setSubgraph(newsubg);
                         } else {
-                            Vector vec = (Vector) (subg.currentSelection);
+                            Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
-                                GrappaSupport.setHighlight((Element) (vec.elementAt(i)), 0, HIGHLIGHT_OFF);
-                                if (((Element) (vec.elementAt(i))) == subg) {
+                                GrappaSupport.setHighlight(vec.elementAt(i), 0, HIGHLIGHT_OFF);
+                                if (vec.elementAt(i) == subg) {
                                     continue;
                                 }
-                                ((Element) (vec.elementAt(i))).setSubgraph(newsubg);
+                                vec.elementAt(i).setSubgraph(newsubg);
                             }
                         }
                         subg.currentSelection = null;
@@ -541,9 +541,9 @@ public class GrappaAdapter
                         if (subg.currentSelection instanceof Element) {
                             GrappaSupport.setHighlight((Element) (subg.currentSelection), DELETION_MASK, HIGHLIGHT_ON);
                         } else {
-                            Vector vec = (Vector) (subg.currentSelection);
+                            Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
-                                GrappaSupport.setHighlight((Element) (vec.elementAt(i)), DELETION_MASK, HIGHLIGHT_ON);
+                                GrappaSupport.setHighlight(vec.elementAt(i), DELETION_MASK, HIGHLIGHT_ON);
                             }
                         }
                         subg.getGraph().repaint();
@@ -554,9 +554,9 @@ public class GrappaAdapter
                         if (subg.currentSelection instanceof Element) {
                             ((Element) (subg.currentSelection)).delete();
                         } else {
-                            Vector vec = (Vector) (subg.currentSelection);
+                            Vector<Element> vec = (Vector<Element>) (subg.currentSelection);
                             for (int i = 0; i < vec.size(); i++) {
-                                ((Element) (vec.elementAt(i))).delete();
+                                vec.elementAt(i).delete();
                             }
                         }
                         subg.currentSelection = null;
