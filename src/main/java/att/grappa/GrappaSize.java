@@ -14,7 +14,7 @@ package att.grappa;
  * This class extends java.awt.geom.Dimension2D and provides built-in string-to-Dimension2D and Dimension2D-to-string
  * conversions suitable for Grappa.
  *
- * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
+ * @version $Id$
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */

@@ -18,7 +18,7 @@ import java.util.Hashtable;
 /**
  * This class translates and encapsulates information provided by the <I>style</I> attribute.
  *
- * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
+ * @version $Id$
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */

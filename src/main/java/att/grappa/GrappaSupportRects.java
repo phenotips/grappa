@@ -18,7 +18,7 @@ import java.awt.Rectangle;
  * This class provides a method for parsing RECORD_SHAPE node labels and deriving the RECT_ATTR information from it. It
  * is called by the GrappaNexus class.
  *
- * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
+ * @version $Id$
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="h ttp://www.research.att.com">Research @
  *         AT&T Labs</a>
  * @see Graph

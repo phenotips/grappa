@@ -27,7 +27,7 @@ import att.grappa.util.IteratorEnumeration;
  * This class describes a subgraph, which can consist of nodes, edges and other subgraphs. Note: The topmost or root
  * subgraph is the entire graph (the Graph object), which is an extension of this class.
  *
- * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
+ * @version $Id$
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  * @see Graph

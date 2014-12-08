@@ -25,7 +25,7 @@ import java.util.ListIterator;
  * This class is the root of the overall graph and provides methods for working with the entire graph (for example,
  * printing the graph). It is an extension of the Subgraph class.
  *
- * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
+ * @version $Id$
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */

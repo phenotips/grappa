@@ -5,7 +5,11 @@
 
 package att.grappa;
 
-/** CUP generated class containing symbol constants. */
+/**
+ * CUP generated class containing symbol constants.
+ *
+ * @version $Id$
+ */
 public class Symbols
 {
     /* terminals */

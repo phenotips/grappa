@@ -40,7 +40,7 @@ import java.util.Hashtable;
  * Grappa does supply a utility, GrappaSupport.filterGraph(), for updating a graph (including position information) from
  * I/O streams such as might be obtained from a java.net.URLConnection.
  *
- * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
+ * @version $Id$
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */

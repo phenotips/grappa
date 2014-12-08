@@ -17,7 +17,7 @@ package att.grappa;
  * shape desired by the user can be expressed as a single general path, then there is no need to use this interface or
  * provide the methods it requires.
  *
- * @version 1.2, 04 Mar 2008; Copyright 1996 - 2008 by AT&T Corp.
+ * @version $Id$
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */

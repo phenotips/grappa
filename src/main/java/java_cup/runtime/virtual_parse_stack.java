@@ -11,7 +11,7 @@ import java.util.Stack;
  * execute actions, only parse state is maintained on the virtual stack, not full Symbol objects.
  *
  * @see java_cup.runtime.lr_parser
- * @version last updated: 7/3/96
+ * @version $Id$
  * @author Frank Flannery
  */
 

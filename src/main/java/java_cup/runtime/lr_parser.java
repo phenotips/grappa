@@ -83,7 +83,7 @@ import java.util.Stack;
  * @see java_cup.runtime.Symbol
  * @see java_cup.runtime.Symbol
  * @see java_cup.runtime.virtual_parse_stack
- * @version last updated: 7/3/96
+ * @version $Id$
  * @author Frank Flannery
  */
 

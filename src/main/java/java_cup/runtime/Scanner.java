@@ -4,7 +4,7 @@ package java_cup.runtime;
  * Defines the Scanner interface, which CUP uses in the default implementation of <code>lr_parser.scan()</code>.
  * Integration of scanners implementing <code>Scanner</code> is facilitated.
  *
- * @version last updated 23-Jul-1999
+ * @version $Id$
  * @author David MacMahon <davidm@smartsc.com>
  */
 
