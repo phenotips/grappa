@@ -514,7 +514,6 @@ class PrintfParser implements GrappaConstants
         double ival;
         StringBuilder retbuf;
         int iexp;
-        int pr;
 
         this.trim = true;
 
@@ -567,7 +566,6 @@ class PrintfParser implements GrappaConstants
         int[] iexp = { 0, 0 };
         StringBuilder retbuf = null;
         int orig_precision;
-        int pr;
 
         this.trim = true;
 
@@ -633,7 +631,6 @@ class PrintfParser implements GrappaConstants
         int[] iexp = { 0, 0 };
         StringBuilder retbuf = null;
         int orig_precision;
-        int pr;
 
         this.trim = true;
 
@@ -699,7 +696,6 @@ class PrintfParser implements GrappaConstants
         int[] iexp = { 0, 0, 0, 0 };
         StringBuilder retbuf = null;
         int orig_precision;
-        int pr;
 
         this.trim = true;
 
@@ -772,7 +768,6 @@ class PrintfParser implements GrappaConstants
     final StringBuilder buildFloat(StringBuilder buf, double arg)
     {
         double val;
-        int sign;
 
         this.precision = (this.precision >= 0) ? this.precision : 6;
         val = arg;

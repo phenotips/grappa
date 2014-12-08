@@ -704,11 +704,7 @@ public class GrappaStyle implements GrappaConstants, Cloneable
                 &&
             !STYLE_LINE_COLOR_DEFAULT.equals(color)
             )) {
-            if (styleStringBuilder == null) {
-                styleStringBuilder = new StringBuilder();
-            } else {
-                styleStringBuilder.append(',');
-            }
+            styleStringBuilder = new StringBuilder();
             styleStringBuilder.append("lineColor(");
             if ((tmpstr = GrappaColor.getColorName(color)) == null) {
                 float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);

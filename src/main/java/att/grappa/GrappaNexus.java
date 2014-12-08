@@ -85,9 +85,6 @@ public class GrappaNexus implements GrappaConstants, Cloneable, ImageObserver, O
     // used for RECORD_SHAPE/MRECORD_SHAPE only, so far
     private Object[] objs = null;
 
-    // used when SHAPE_ATTR is CUSTOM_SHAPE
-    private Object custom_shape = null;
-
     /**
      * Indicates if element text should be included in the element bounding box. By default, it is.
      *
@@ -229,7 +226,6 @@ public class GrappaNexus implements GrappaConstants, Cloneable, ImageObserver, O
         switch (this.element.getType()) {
             case NODE:
                 // re-initialize some values
-                this.custom_shape = null;
                 this.objs = null;
 
                 if (this.element.getSubgraph().isCluster() && this.element.getSubgraph().grappaNexus != null) {
@@ -783,8 +779,6 @@ public class GrappaNexus implements GrappaConstants, Cloneable, ImageObserver, O
                 // set font
                 tfont = new Font(fontname, fontstyle.intValue(), fontsize.intValue() + fontadj.intValue());
 
-                String rectString = null;
-
                 int lines;
                 int i;
                 char[] array;
@@ -793,7 +787,6 @@ public class GrappaNexus implements GrappaConstants, Cloneable, ImageObserver, O
                 java.awt.font.LineMetrics[] mtrc;
                 int start;
                 char ch;
-                String str;
                 double wdinfo, htinfo;
                 double top;
                 double x;
@@ -920,7 +913,6 @@ public class GrappaNexus implements GrappaConstants, Cloneable, ImageObserver, O
                         lines = 0;
                         start = 0;
                         ch = 'n';
-                        str = null;
                         wdinfo = htinfo = 0;
                         for (i = 0; i < array.length; i++) {
                             if (array[i] == '\\'

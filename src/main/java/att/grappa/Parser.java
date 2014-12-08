@@ -805,7 +805,6 @@ class CUP$Parser$actions
         Attribute key = null;
         Attribute name = null;
         Attribute attr = null;
-        int skip = -1;
         for (int i = 0; i < this.attrs.size(); i++) {
             attr = this.attrs.elementAt(i);
             if (attr.getName().equals("key")) {
@@ -1004,8 +1003,6 @@ class CUP$Parser$actions
             case 55: // optSubgHdr ::= SUBGRAPH ATOM
             {
                 String RESULT = null;
-                int valleft = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = ((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
                 String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = val;
@@ -1025,10 +1022,6 @@ class CUP$Parser$actions
                 if (CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value != null) {
                     RESULT = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
                 }
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
-                String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
-
                 closeSubg();
 
                 CUP$Parser$result =
@@ -1042,8 +1035,6 @@ class CUP$Parser$actions
             case 53: // NT$2 ::=
             {
                 Object RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 openSubg(val);
@@ -1071,8 +1062,6 @@ class CUP$Parser$actions
             case 51: // attrMacro ::= ATSIGN ATOM
             {
                 Object RESULT = null;
-                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 appendAttr(name, null);
@@ -1088,11 +1077,7 @@ class CUP$Parser$actions
             case 50: // attrAssignment ::= ATOM EQUAL ATOM
             {
                 Object RESULT = null;
-                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
-                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
                 String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
-                int valueleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valueright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String value =
                     (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
@@ -1231,8 +1216,6 @@ class CUP$Parser$actions
             case 39: // optMacroName ::= ATOM EQUAL
             {
                 String RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
                 String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
 
                 RESULT = val;
@@ -1248,9 +1231,6 @@ class CUP$Parser$actions
             case 38: // attrType ::= EDGE
             {
                 Integer RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
-                Integer val = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = new Integer(GrappaConstants.EDGE);
 
@@ -1265,9 +1245,6 @@ class CUP$Parser$actions
             case 37: // attrType ::= NODE
             {
                 Integer RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
-                Integer val = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = new Integer(GrappaConstants.NODE);
 
@@ -1282,9 +1259,6 @@ class CUP$Parser$actions
             case 36: // attrType ::= GRAPH
             {
                 Integer RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
-                Integer val = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = new Integer(GrappaConstants.SUBGRAPH);
 
@@ -1313,11 +1287,7 @@ class CUP$Parser$actions
             case 34: // attrStmt ::= attrType optMacroName attrList
             {
                 Object RESULT = null;
-                int typeleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
-                int typeright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
                 Integer type = (Integer) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
-                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
-                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
                 String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
 
                 attrStmt(type.intValue(), name);
@@ -1347,8 +1317,6 @@ class CUP$Parser$actions
             case 32: // optPort ::= COLON ATOM
             {
                 String RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0)).right;
                 String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = val;
@@ -1364,11 +1332,7 @@ class CUP$Parser$actions
             case 31: // node ::= ATOM optPort
             {
                 Object RESULT = null;
-                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
-                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
                 String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
-                int portleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int portright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String port = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 appendNode(name, port);
@@ -1427,9 +1391,6 @@ class CUP$Parser$actions
                 if (CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value != null) {
                     RESULT = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
                 }
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
-                Boolean val = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 this.thisElemType = GrappaConstants.EDGE;
                 RESULT = new Boolean(true);
@@ -1518,8 +1479,6 @@ class CUP$Parser$actions
             case 21: // compound ::= simple rCompound optAttr
             {
                 Object RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
                 Boolean val =
                     (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
 
@@ -1638,8 +1597,6 @@ class CUP$Parser$actions
             case 12: // optGraphName ::= ATOM
             {
                 String RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String val = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 RESULT = val;
@@ -1711,8 +1668,6 @@ class CUP$Parser$actions
             case 7: // hdr ::= STRICTDIGRAPH optGraphName
             {
                 Object RESULT = null;
-                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 startGraph(name, true, true);
@@ -1728,8 +1683,6 @@ class CUP$Parser$actions
             case 6: // hdr ::= STRICTGRAPH optGraphName
             {
                 Object RESULT = null;
-                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 startGraph(name, true, false);
@@ -1745,14 +1698,8 @@ class CUP$Parser$actions
             case 5: // hdr ::= optStrict graphType optGraphName
             {
                 Object RESULT = null;
-                int strictleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).left;
-                int strictright = CUP$Parser$stack.elementAt(CUP$Parser$top - 2).right;
                 Boolean strict = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 2).value;
-                int typeleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
-                int typeright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
                 Boolean type = (Boolean) CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
-                int nameleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int nameright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 String name = (String) CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 startGraph(name, type.booleanValue(), strict.booleanValue());
@@ -1784,8 +1731,6 @@ class CUP$Parser$actions
             case 3: // graph ::= error
             {
                 Object RESULT = null;
-                int valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).left;
-                int valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).right;
                 Object val = CUP$Parser$stack.elementAt(CUP$Parser$top - 0).value;
 
                 // CUP$parser.report_error ("An error was encountered while graph parsing (" + val.toString() + ").",
@@ -1836,8 +1781,6 @@ class CUP$Parser$actions
             case 0: // $START ::= graph EOF
             {
                 Object RESULT = null;
-                int start_valleft = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).left;
-                int start_valright = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).right;
                 Object start_val = CUP$Parser$stack.elementAt(CUP$Parser$top - 1).value;
                 RESULT = start_val;
                 CUP$Parser$result =

@@ -227,7 +227,6 @@ public class GrappaSupportRects implements GrappaConstants
         portBuf = new StringBuilder();
 
         int mode = 0;
-        int fi = 0;
         boolean wflag = true;
         TableField tf = null;
         char curCh = '\000';

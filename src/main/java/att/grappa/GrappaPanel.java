@@ -104,8 +104,6 @@ public class GrappaPanel extends javax.swing.JPanel implements att.grappa.Grappa
 
     private boolean scaleChanged = false;
 
-    private boolean paintActive = false;
-
     private Dimension prevsz = null;
 
     private Point2D panelcpt = null;
@@ -240,8 +238,6 @@ public class GrappaPanel extends javax.swing.JPanel implements att.grappa.Grappa
             return (null);
         }
         Graphics2D g2d = (Graphics2D) g;
-        int i;
-        long thisPaint = System.currentTimeMillis();
         Container prnt;
         Container tprnt;
         Dimension nsz;
@@ -259,10 +255,6 @@ public class GrappaPanel extends javax.swing.JPanel implements att.grappa.Grappa
         this.elementVector = null;
 
         GrappaBox bbox = new GrappaBox(this.subgraph.getBoundingBox());
-
-        if (bbox == null) {
-            return (null);
-        }
 
         GrappaSize margins = (GrappaSize) (this.subgraph.getAttributeValue(MARGIN_ATTR));
 
@@ -365,7 +357,6 @@ public class GrappaPanel extends javax.swing.JPanel implements att.grappa.Grappa
             }
             this.scaleFactor = 1;
             if (this.zoomBox.width != 0 && this.zoomBox.height != 0 && this.oldTransform != null) {
-                GrappaBox zb = new GrappaBox(this.oldTransform.createTransformedShape(this.zoomBox).getBounds2D());
                 double scaleToWidth = r.width;
                 double scaleToHeight = r.height;
                 // System.err.println("zb=("+zb.x+","+zb.y+","+zb.width+","+zb.height+")");
@@ -373,8 +364,6 @@ public class GrappaPanel extends javax.swing.JPanel implements att.grappa.Grappa
                 // System.err.println("vr=("+r.x+","+r.y+","+r.width+","+r.height+")");
                 double widthRatio = scaleToWidth / this.zoomBox.width;
                 double heightRatio = scaleToHeight / this.zoomBox.height;
-                double xTranslate = 0;
-                double yTranslate = 0;
                 if (widthRatio < heightRatio) {
                     this.scaleFactor = widthRatio;
                 } else {

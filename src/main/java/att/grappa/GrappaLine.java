@@ -316,7 +316,6 @@ public class GrappaLine implements GrappaConstants, Cloneable, Shape
         int pts = 1;
         boolean wasSpace = true;
         GrappaPoint[] grpts = null;
-        Integer attr_type;
 
         // first pass is mostly sizing and basic validity check
         for (i = 0, j = len; i < len; i++) {
