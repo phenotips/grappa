@@ -39,10 +39,7 @@ import java.util.Observer;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public class GrappaNexus
-    implements
-    GrappaConstants,
-    Cloneable, ImageObserver, Observer, Shape
+public class GrappaNexus implements GrappaConstants, Cloneable, ImageObserver, Observer, Shape
 {
     /**
      * RoundRectangle arc height factor
@@ -1154,8 +1151,8 @@ public class GrappaNexus
         this.lastUpdate = this.lastImageUpdate = thisImageUpdate;
     }
 
-    public final boolean
-        imageUpdate(Image image, int flags, int x, int y, int width, int height)
+    @Override
+    public final boolean imageUpdate(Image image, int flags, int x, int y, int width, int height)
     {
 
         boolean ret = true;
@@ -1271,6 +1268,7 @@ public class GrappaNexus
     //
     // //////////////////////////////////////////////////////////////////////
 
+    @Override
     public boolean contains(double x, double y)
     {
 
@@ -1295,6 +1293,7 @@ public class GrappaNexus
         return (contains);
     }
 
+    @Override
     public boolean contains(double x, double y, double width, double height)
     {
 
@@ -1319,24 +1318,28 @@ public class GrappaNexus
         return (contains);
     }
 
+    @Override
     public boolean contains(Point2D p)
     {
 
         return (contains(p.getX(), p.getY()));
     }
 
+    @Override
     public boolean contains(Rectangle2D r)
     {
 
         return (contains(r.getX(), r.getY(), r.getWidth(), r.getHeight()));
     }
 
+    @Override
     public Rectangle getBounds()
     {
 
         return (getBounds2D().getBounds());
     }
 
+    @Override
     public Rectangle2D getBounds2D()
     {
 
@@ -1414,16 +1417,19 @@ public class GrappaNexus
         return new GrappaPathIterator(this, null);
     }
 
+    @Override
     public PathIterator getPathIterator(AffineTransform at)
     {
         return new GrappaPathIterator(this, at);
     }
 
+    @Override
     public PathIterator getPathIterator(AffineTransform at, double flatness)
     {
         return new FlatteningPathIterator(new GrappaPathIterator(this, at), flatness);
     }
 
+    @Override
     public boolean intersects(double x, double y, double width, double height)
     {
 
@@ -1448,6 +1454,7 @@ public class GrappaNexus
         return (intersects);
     }
 
+    @Override
     public boolean intersects(Rectangle2D r)
     {
 
@@ -1469,6 +1476,7 @@ public class GrappaNexus
      *            a two element Object array, where the first element is a new Attribute to be observed in place of that
      *            passed via <I>obs</I> and the second element is the update time of this new Attribute.
      */
+    @Override
     public void update(java.util.Observable obs, Object arg)
     {
 

@@ -34,12 +34,8 @@ import java.util.Vector;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a> and Rich Drechsler, <a
  *         href="http://www.research.att.com">Research @ AT&T Labs</a>
  */
-public abstract class GrappaSupport
-
-    implements GrappaConstants
-
+public abstract class GrappaSupport implements GrappaConstants
 {
-
     // /////////////////////////////////////////////////////////////////////////
     //
     // The ctypes type stuff is courtesy of Rich Drechsler of AT&T Labs.
@@ -65,22 +61,22 @@ public abstract class GrappaSupport
     private static final short LC = 0x100; // lower case
 
     private static final short ctype[] = {
-    CN, CN, CN, CN, CN, CN, CN, CN,
-    CN, CN | WS, CN | WS, CN | WS, CN | WS, CN | WS, CN, CN,
-    CN, CN, CN, CN, CN, CN, CN, CN,
-    CN, CN, CN, CN, CN, CN, CN, CN,
-    WS | SP, PU, PU, PU, PU, PU, PU, PU,
-    PU, PU, PU, PU, PU, PU, PU, PU,
-    DG | OD, DG | OD, DG | OD, DG | OD, DG | OD, DG | OD, DG | OD, DG | OD,
-    DG, DG, PU, PU, PU, PU, PU, PU,
-    PU, UC | HD, UC | HD, UC | HD, UC | HD, UC | HD, UC | HD, UC,
-    UC, UC, UC, UC, UC, UC, UC, UC,
-    UC, UC, UC, UC, UC, UC, UC, UC,
-    UC, UC, UC, PU, PU, PU, PU, PU,
-    PU, LC | HD, LC | HD, LC | HD, LC | HD, LC | HD, LC | HD, LC,
-    LC, LC, LC, LC, LC, LC, LC, LC,
-    LC, LC, LC, LC, LC, LC, LC, LC,
-    LC, LC, LC, PU, PU, PU, PU, CN,
+        CN, CN, CN, CN, CN, CN, CN, CN,
+        CN, CN | WS, CN | WS, CN | WS, CN | WS, CN | WS, CN, CN,
+        CN, CN, CN, CN, CN, CN, CN, CN,
+        CN, CN, CN, CN, CN, CN, CN, CN,
+        WS | SP, PU, PU, PU, PU, PU, PU, PU,
+        PU, PU, PU, PU, PU, PU, PU, PU,
+        DG | OD, DG | OD, DG | OD, DG | OD, DG | OD, DG | OD, DG | OD, DG | OD,
+        DG, DG, PU, PU, PU, PU, PU, PU,
+        PU, UC | HD, UC | HD, UC | HD, UC | HD, UC | HD, UC | HD, UC,
+        UC, UC, UC, UC, UC, UC, UC, UC,
+        UC, UC, UC, UC, UC, UC, UC, UC,
+        UC, UC, UC, PU, PU, PU, PU, PU,
+        PU, LC | HD, LC | HD, LC | HD, LC | HD, LC | HD, LC | HD, LC,
+        LC, LC, LC, LC, LC, LC, LC, LC,
+        LC, LC, LC, LC, LC, LC, LC, LC,
+        LC, LC, LC, PU, PU, PU, PU, CN,
     };
 
     private static final short ALPHA = (UC | LC);
@@ -108,10 +104,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isalnum(int ch)
+    static boolean isalnum(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & ALNUM) != 0);
     }
 
@@ -120,10 +114,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isalpha(int ch)
+    static boolean isalpha(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & ALPHA) != 0);
     }
 
@@ -132,10 +124,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isascii(int ch)
+    static boolean isascii(int ch)
     {
-
         return (ch >= 0 && ch < 128);
     }
 
@@ -144,10 +134,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        iscntrl(int ch)
+    static boolean iscntrl(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & CN) != 0);
     }
 
@@ -156,10 +144,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isdigit(int ch)
+    static boolean isdigit(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & DG) != 0);
     }
 
@@ -168,10 +154,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isgraph(int ch)
+    static boolean isgraph(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & DG) != 0);
     }
 
@@ -180,10 +164,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        islower(int ch)
+    static boolean islower(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & LC) != 0);
     }
 
@@ -192,10 +174,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isoctal(int ch)
+    static boolean isoctal(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & ODIGIT) != 0);
     }
 
@@ -204,10 +184,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isprint(int ch)
+    static boolean isprint(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & PRINT) != 0);
     }
 
@@ -216,10 +194,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        ispunct(int ch)
+    static boolean ispunct(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & PU) != 0);
     }
 
@@ -228,10 +204,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isspace(int ch)
+    static boolean isspace(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & WS) != 0);
     }
 
@@ -240,10 +214,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isupper(int ch)
+    static boolean isupper(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & UC) != 0);
     }
 
@@ -252,10 +224,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static boolean
-        isxdigit(int ch)
+    static boolean isxdigit(int ch)
     {
-
         return (isascii(ch) && (ctype[ch] & XDIGIT) != 0);
     }
 
@@ -264,10 +234,8 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static int
-        tolower(int ch)
+    static int tolower(int ch)
     {
-
         return (isupper(ch) ? ch + UPPERTOLOWER : ch);
     }
 
@@ -276,19 +244,15 @@ public abstract class GrappaSupport
     /**
      * for ASCII only
      */
-    static int
-        toupper(int ch)
+    static int toupper(int ch)
     {
-
         return (islower(ch) ? ch + LOWERTOUPPER : ch);
     }
 
     // /////////////////////////////////////////////////////////////////////////
 
-    static String[]
-        strsplit(String tuple) throws IllegalArgumentException
+    static String[] strsplit(String tuple) throws IllegalArgumentException
     {
-
         if (tuple == null) {
             throw new IllegalArgumentException("supplied split string is null");
         }
@@ -307,10 +271,8 @@ public abstract class GrappaSupport
 
     // /////////////////////////////////////////////////////////////////////////
 
-    static float[]
-        floatArrayForTuple(String tuple) throws IllegalArgumentException, NumberFormatException
+    static float[] floatArrayForTuple(String tuple) throws IllegalArgumentException, NumberFormatException
     {
-
         if (tuple == null) {
             throw new IllegalArgumentException("supplied tuple string is null");
         }
@@ -325,15 +287,12 @@ public abstract class GrappaSupport
         }
 
         return array;
-
     }
 
     // /////////////////////////////////////////////////////////////////////////
 
-    static double[]
-        arrayForTuple(String tuple) throws IllegalArgumentException, NumberFormatException
+    static double[] arrayForTuple(String tuple) throws IllegalArgumentException, NumberFormatException
     {
-
         if (tuple == null) {
             throw new IllegalArgumentException("supplied tuple string is null");
         }
@@ -348,7 +307,6 @@ public abstract class GrappaSupport
         }
 
         return array;
-
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -524,7 +482,6 @@ public abstract class GrappaSupport
      */
     public static Element findContainingElement(Subgraph subg, Point2D pt)
     {
-
         Element elem = null;
 
         Rectangle2D bb = subg.getBoundingBox();
@@ -900,5 +857,4 @@ public abstract class GrappaSupport
 
         return true;
     }
-
 }

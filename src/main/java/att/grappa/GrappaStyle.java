@@ -22,10 +22,7 @@ import java.util.Hashtable;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public class GrappaStyle
-    implements
-    GrappaConstants,
-    Cloneable
+public class GrappaStyle implements GrappaConstants, Cloneable
 {
     // element type associated with this style
     private int elementType;

@@ -19,6 +19,8 @@ package att.grappa;
  */
 public class GraphParserException extends RuntimeException
 {
+    private static final long serialVersionUID = 4571843140162088629L;
+
     /**
      * Constructs an <code>GraphParserException</code> with no detail message.
      */

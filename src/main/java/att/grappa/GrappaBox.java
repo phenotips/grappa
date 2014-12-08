@@ -20,6 +20,8 @@ package att.grappa;
  */
 public class GrappaBox extends java.awt.geom.Rectangle2D.Double
 {
+    private static final long serialVersionUID = 5246139369712798254L;
+
     private boolean dimensioned = true;
 
     /**

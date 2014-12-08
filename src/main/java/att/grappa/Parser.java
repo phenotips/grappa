@@ -36,7 +36,6 @@ import java_cup.runtime.Symbol;
  */
 public class Parser extends java_cup.runtime.lr_parser
 {
-
     /** Default constructor. */
     public Parser()
     {

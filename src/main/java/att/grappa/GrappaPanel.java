@@ -51,16 +51,11 @@ import javax.swing.event.PopupMenuListener;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public class GrappaPanel extends javax.swing.JPanel
-    implements
-    att.grappa.GrappaConstants,
-    ComponentListener,
-    AncestorListener, PopupMenuListener,
-    MouseListener, MouseMotionListener,
-    Printable,
-    Runnable,
-    Scrollable
+public class GrappaPanel extends javax.swing.JPanel implements att.grappa.GrappaConstants, ComponentListener,
+    AncestorListener, PopupMenuListener, MouseListener, MouseMotionListener, Printable, Runnable, Scrollable
 {
+    private static final long serialVersionUID = 2528562615866907501L;
+
     Graph graph;
 
     Subgraph subgraph;
@@ -187,6 +182,7 @@ public class GrappaPanel extends javax.swing.JPanel
         return (addGrappaListener(null));
     }
 
+    @Override
     public int print(Graphics g, PageFormat pf, int pi)
         throws PrinterException
     {
@@ -1105,16 +1101,19 @@ public class GrappaPanel extends javax.swing.JPanel
     //
     // /////////////////////////////////////////////////////////////////
 
+    @Override
     public void ancestorMoved(AncestorEvent aev)
     {
         // don't care
     }
 
+    @Override
     public void ancestorAdded(AncestorEvent aev)
     {
         this.graph.addPanel(this);
     }
 
+    @Override
     public void ancestorRemoved(AncestorEvent aev)
     {
         this.graph.removePanel(this);
@@ -1126,22 +1125,26 @@ public class GrappaPanel extends javax.swing.JPanel
     //
     // /////////////////////////////////////////////////////////////////
 
+    @Override
     public void componentHidden(ComponentEvent cev)
     {
         // don't care
     }
 
+    @Override
     public void componentMoved(ComponentEvent cev)
     {
         // don't care
     }
 
+    @Override
     public void componentResized(ComponentEvent cev)
     {
         // Needed to reset JScrollPane scrollbars, for example
         revalidate();
     }
 
+    @Override
     public void componentShown(ComponentEvent cev)
     {
         // don't care
@@ -1153,16 +1156,19 @@ public class GrappaPanel extends javax.swing.JPanel
     //
     // /////////////////////////////////////////////////////////////////
 
+    @Override
     public void popupMenuCanceled(PopupMenuEvent pmev)
     {
         // don't care
     }
 
+    @Override
     public void popupMenuWillBecomeInvisible(PopupMenuEvent pmev)
     {
         this.inMenu = false;
     }
 
+    @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent pmev)
     {
         this.inMenu = true;
@@ -1174,6 +1180,7 @@ public class GrappaPanel extends javax.swing.JPanel
     //
     // /////////////////////////////////////////////////////////////////
 
+    @Override
     public void mouseClicked(MouseEvent mev)
     {
         if (this.inverseTransform == null || this.grappaListener == null || this.inMenu) {
@@ -1190,6 +1197,7 @@ public class GrappaPanel extends javax.swing.JPanel
                 new GrappaPoint(pt.getX(), pt.getY()), mev.getModifiers(), mev.getClickCount(), this);
     }
 
+    @Override
     public void mousePressed(MouseEvent mev)
     {
         if (this.inverseTransform == null || this.grappaListener == null || this.inMenu) {
@@ -1205,6 +1213,7 @@ public class GrappaPanel extends javax.swing.JPanel
             new GrappaPoint(pt.getX(), pt.getY())), (this.pressedModifiers = mev.getModifiers()), this);
     }
 
+    @Override
     public void mouseReleased(MouseEvent mev)
     {
         if (this.inverseTransform == null || this.grappaListener == null || this.inMenu) {
@@ -1236,11 +1245,13 @@ public class GrappaPanel extends javax.swing.JPanel
 
     }
 
+    @Override
     public void mouseEntered(MouseEvent mev)
     {
         // don't care
     }
 
+    @Override
     public void mouseExited(MouseEvent mev)
     {
         // don't care
@@ -1252,6 +1263,7 @@ public class GrappaPanel extends javax.swing.JPanel
     //
     // /////////////////////////////////////////////////////////////////
 
+    @Override
     public void mouseDragged(MouseEvent mev)
     {
         if (this.inverseTransform == null || this.grappaListener == null || this.inMenu) {
@@ -1275,6 +1287,7 @@ public class GrappaPanel extends javax.swing.JPanel
         }
     }
 
+    @Override
     public void mouseMoved(MouseEvent mev)
     {
         // don't care
@@ -1288,6 +1301,7 @@ public class GrappaPanel extends javax.swing.JPanel
      * @return The preferredSize of a JViewport whose view is this Scrollable.
      * @see JViewport#getPreferredSize
      */
+    @Override
     public Dimension getPreferredScrollableViewportSize()
     {
 
@@ -1305,6 +1319,7 @@ public class GrappaPanel extends javax.swing.JPanel
      *         always 1.
      * @see JScrollBar#setUnitIncrement
      */
+    @Override
     public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction)
     {
         return (1);
@@ -1320,6 +1335,7 @@ public class GrappaPanel extends javax.swing.JPanel
      *         of the visible width for a horizontal increment or 90% of the visible height for a vertical increment.
      * @see JScrollBar#setBlockIncrement
      */
+    @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction)
     {
         int block;
@@ -1342,6 +1358,7 @@ public class GrappaPanel extends javax.swing.JPanel
      *
      * @return false
      */
+    @Override
     public boolean getScrollableTracksViewportWidth()
     {
         return (false);
@@ -1353,11 +1370,13 @@ public class GrappaPanel extends javax.swing.JPanel
      *
      * @return false
      */
+    @Override
     public boolean getScrollableTracksViewportHeight()
     {
         return (false);
     }
 
+    @Override
     public void run()
     {
         Point2D cpt = getCPT();

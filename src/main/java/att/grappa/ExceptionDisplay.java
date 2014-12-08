@@ -94,6 +94,8 @@ public class ExceptionDisplay
     // TODO: re-do this using JFrame (not a big deal)
     class Display extends Frame
     {
+        private static final long serialVersionUID = 4155196593331479095L;
+
         private TextArea textarea = null;
 
         private Panel buttonPanel = null;
@@ -173,6 +175,7 @@ public class ExceptionDisplay
                 ExceptionDisplay.this.display = null;
             }
 
+            @Override
             public void actionPerformed(ActionEvent evt)
             {
                 Object src = evt.getSource();

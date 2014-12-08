@@ -17,12 +17,8 @@ package att.grappa;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a> and Rich Drechsler, <a
  *         href="http://www.research.att.com">Research @ AT&T Labs</a>
  */
-public class GrappaSupportPrintf
-
-    implements GrappaConstants
-
+public class GrappaSupportPrintf implements GrappaConstants
 {
-
     // /////////////////////////////////////////////////////////////////////////
     //
     // GrappaSupportPrintf
@@ -36,10 +32,8 @@ public class GrappaSupportPrintf
      *            elements are object to be formatted according to the format.
      * @return a string giving a formatted representation of the arguments.
      */
-    public final static String
-        sprintf(Object args[])
+    public final static String sprintf(Object args[])
     {
-
         PrintfParser cvt;
         StringBuilder prtbuf;
         char format[];
@@ -355,12 +349,8 @@ public class GrappaSupportPrintf
     // /////////////////////////////////////////////////////////////////////////
 }
 
-class PrintfParser
-
-    implements GrappaConstants
-
+class PrintfParser implements GrappaConstants
 {
-
     private boolean alternate;
 
     private boolean rightpad;
@@ -391,7 +381,6 @@ class PrintfParser
 
     PrintfParser()
     {
-
         this.scratch = new StringBuilder();
     }
 
@@ -401,19 +390,15 @@ class PrintfParser
     //
     // /////////////////////////////////////////////////////////////////////////
 
-    final int
-        parse(char cfmt[])
+    final int parse(char cfmt[])
     {
-
         return (parse(cfmt, 0));
     }
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final int
-        parse(char cfmt[], int n)
+    final int parse(char cfmt[], int n)
     {
-
         boolean done;
         int ch;
 
@@ -477,10 +462,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildChar(StringBuilder buf, int arg)
+    final StringBuilder buildChar(StringBuilder buf, int arg)
     {
-
         this.scratch.setLength(0);
         this.scratch.append((char) arg);
         return (strpad(buf, this.scratch.toString(), ' ', this.width, this.rightpad));
@@ -488,10 +471,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildExp(StringBuilder buf, double arg, boolean upper)
+    final StringBuilder buildExp(StringBuilder buf, double arg, boolean upper)
     {
-
         double exp;
         double base;
         double val;
@@ -526,10 +507,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildFlex(StringBuilder buf, double arg, boolean upper)
+    final StringBuilder buildFlex(StringBuilder buf, double arg, boolean upper)
     {
-
         double exp;
         double val;
         double ival;
@@ -579,10 +558,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildPoint(StringBuilder buf, java.awt.geom.Point2D parg, boolean upper)
+    final StringBuilder buildPoint(StringBuilder buf, java.awt.geom.Point2D parg, boolean upper)
     {
-
         double[] arg = { 0, 0 };
         double[] exp = { 0, 0 };
         double[] val = { 0, 0 };
@@ -647,10 +624,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildSize(StringBuilder buf, java.awt.geom.Dimension2D parg, boolean upper)
+    final StringBuilder buildSize(StringBuilder buf, java.awt.geom.Dimension2D parg, boolean upper)
     {
-
         double[] arg = { 0, 0 };
         double[] exp = { 0, 0 };
         double[] val = { 0, 0 };
@@ -715,10 +690,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildBox(StringBuilder buf, java.awt.geom.Rectangle2D parg, boolean upper, boolean dimensioned)
+    final StringBuilder buildBox(StringBuilder buf, java.awt.geom.Rectangle2D parg, boolean upper, boolean dimensioned)
     {
-
         double[] arg = { 0, 0, 0, 0 };
         double[] exp = { 0, 0, 0, 0 };
         double[] val = { 0, 0, 0, 0 };
@@ -796,10 +769,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildFloat(StringBuilder buf, double arg)
+    final StringBuilder buildFloat(StringBuilder buf, double arg)
     {
-
         double val;
         int sign;
 
@@ -814,10 +785,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildHex(StringBuilder buf, int arg, boolean upper)
+    final StringBuilder buildHex(StringBuilder buf, int arg, boolean upper)
     {
-
         String str;
 
         this.scratch.setLength(0);
@@ -859,10 +828,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildInteger(StringBuilder buf, long arg)
+    final StringBuilder buildInteger(StringBuilder buf, long arg)
     {
-
         String str;
         String sign;
         long val;
@@ -890,10 +857,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildOctal(StringBuilder buf, int arg)
+    final StringBuilder buildOctal(StringBuilder buf, int arg)
     {
-
         String str;
 
         this.scratch.setLength(0);
@@ -918,10 +883,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    final StringBuilder
-        buildString(StringBuilder buf, String arg)
+    final StringBuilder buildString(StringBuilder buf, String arg)
     {
-
         String str;
 
         if (this.precision > 0) {
@@ -943,10 +906,8 @@ class PrintfParser
     //
     // /////////////////////////////////////////////////////////////////////////
 
-    private String
-        doubleToString(double val, String exp)
+    private String doubleToString(double val, String exp)
     {
-
         String sign;
         double whole;
         double power;
@@ -1019,10 +980,8 @@ class PrintfParser
 
     // /////////////////////////////////////////////////////////////////////////
 
-    private StringBuilder
-        strpad(StringBuilder buf, String str, int ch, int width, boolean right)
+    private StringBuilder strpad(StringBuilder buf, String str, int ch, int width, boolean right)
     {
-
         int len;
         int n;
 

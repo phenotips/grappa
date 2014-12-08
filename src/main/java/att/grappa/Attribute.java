@@ -85,10 +85,7 @@ import java.util.List;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public final class Attribute extends java.util.Observable
-    implements
-    att.grappa.AttributeHandler,
-    att.grappa.GrappaConstants
+public final class Attribute extends java.util.Observable implements AttributeHandler, GrappaConstants
 {
     // the custom attribute handler
     private static AttributeHandler specialHandler = null;
@@ -379,6 +376,7 @@ public final class Attribute extends java.util.Observable
      * @param attrtype the type of the attribute
      * @return a string representation of the supplied value
      */
+    @Override
     public String convertValue(int type, String name, Object value, int attrtype)
     {
         String stringValue = null;
@@ -530,6 +528,7 @@ public final class Attribute extends java.util.Observable
      * @param attrtype the type of the attribute
      * @return an object representation of the supplied value
      */
+    @Override
     public Object convertStringValue(int type, String name, String stringValue, int attrtype)
     {
         Object value = null;
@@ -640,6 +639,7 @@ public final class Attribute extends java.util.Observable
      * @param attrtype the type of the attribute
      * @return a copy of the supplied value
      */
+    @Override
     public Object copyValue(int type, String name, Object value, int attrtype)
     {
         Object copy_value = null;

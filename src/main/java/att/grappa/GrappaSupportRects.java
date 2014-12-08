@@ -23,8 +23,7 @@ import java.awt.Rectangle;
  *         AT&T Labs</a>
  * @see Graph
  */
-public class GrappaSupportRects
-    implements GrappaConstants
+public class GrappaSupportRects implements GrappaConstants
 {
     /**
      * Rough font sizing information for the roman (or serif) font.
@@ -338,8 +337,7 @@ public class GrappaSupportRects
     }
 }
 
-class TableField
-    implements GrappaConstants
+class TableField implements GrappaConstants
 {
     private Dimension size = new Dimension();
 
@@ -709,5 +707,4 @@ class TableField
             tfield.debugID();
         }
     }
-
 }

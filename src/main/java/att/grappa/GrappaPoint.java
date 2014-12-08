@@ -20,6 +20,8 @@ package att.grappa;
  */
 public class GrappaPoint extends java.awt.geom.Point2D.Double
 {
+    private static final long serialVersionUID = 7076524042860153737L;
+
     /**
      * Constructs and initializes a <code>GrappaPoint</code> with coordinates (0,&nbsp;0).
      */

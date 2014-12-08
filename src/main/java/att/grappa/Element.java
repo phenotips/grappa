@@ -31,7 +31,7 @@ import att.grappa.util.IteratorEnumeration;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public abstract class Element implements att.grappa.GrappaConstants
+public abstract class Element implements GrappaConstants
 {
     // the containing graph and the parent subgraph element
     private Graph graph = null;

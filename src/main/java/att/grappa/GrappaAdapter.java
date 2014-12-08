@@ -45,8 +45,7 @@ import java.util.Vector;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public class GrappaAdapter
-    implements GrappaConstants, GrappaListener, ActionListener
+public class GrappaAdapter implements GrappaConstants, GrappaListener, ActionListener
 {
     /**
      * The method called when a mouse click occurs on a displayed subgraph.
@@ -58,6 +57,7 @@ public class GrappaAdapter
      * @param clickCount count of mouse clicks that triggered this action
      * @param panel specific panel where the action occurred
      */
+    @Override
     public void grappaClicked(Subgraph subg, Element elem, GrappaPoint pt, int modifiers, int clickCount,
         GrappaPanel panel)
     {
@@ -166,6 +166,7 @@ public class GrappaAdapter
      * @param modifiers mouse modifiers in effect
      * @param panel specific panel where the action occurred
      */
+    @Override
     public void grappaPressed(Subgraph subg, Element elem, GrappaPoint pt, int modifiers, GrappaPanel panel)
     {
         if ((modifiers & (InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK)) != 0
@@ -239,6 +240,7 @@ public class GrappaAdapter
      * @param outline enclosing box specification from the previous drag position (for XOR reset purposes)
      * @param panel specific panel where the action occurred
      */
+    @Override
     public void grappaReleased(Subgraph subg, Element elem, GrappaPoint pt, int modifiers, Element pressedElem,
         GrappaPoint pressedPt, int pressedModifiers, GrappaBox outline, GrappaPanel panel)
     {
@@ -346,6 +348,7 @@ public class GrappaAdapter
      * @param outline enclosing box specification from the previous drag position (for XOR reset purposes)
      * @param panel specific panel where the action occurred
      */
+    @Override
     public void grappaDragged(Subgraph subg, GrappaPoint currentPt, int currentModifiers, Element pressedElem,
         GrappaPoint pressedPt, int pressedModifiers, GrappaBox outline, GrappaPanel panel)
     {
@@ -380,6 +383,7 @@ public class GrappaAdapter
      *         is returned. If the mouse is outside the graph bounds, then the text supplied to the graph setToolTipText
      *         method is supplied.
      */
+    @Override
     public String grappaTip(Subgraph subg, Element elem, GrappaPoint pt, int modifiers, GrappaPanel panel)
     {
         String tip = null;
@@ -450,6 +454,7 @@ public class GrappaAdapter
      *
      * @param aev the action event trigger.
      */
+    @Override
     public void actionPerformed(ActionEvent aev)
     {
         Object src = aev.getSource();

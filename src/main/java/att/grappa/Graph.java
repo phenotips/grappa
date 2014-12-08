@@ -574,8 +574,7 @@ public class Graph extends Subgraph
         if (tval == 0) {
             throw new IllegalArgumentException("supplied type does not specify node, edge or subgraph");
         }
-        value =
-            (value << GrappaConstants.TYPES_SHIFT)
+        value = (value << GrappaConstants.TYPES_SHIFT)
             | (type & (GrappaConstants.NODE | GrappaConstants.EDGE | GrappaConstants.SUBGRAPH));
         return new Long(value);
     }

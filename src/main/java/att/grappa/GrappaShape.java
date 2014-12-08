@@ -27,12 +27,8 @@ import java.awt.geom.Rectangle2D;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public class GrappaShape
-    implements
-    GrappaConstants,
-    Cloneable, Shape
+public class GrappaShape implements GrappaConstants, Cloneable, Shape
 {
-
     /**
      * path that defines shape
      */
@@ -607,31 +603,37 @@ public class GrappaShape
     //
     // //////////////////////////////////////////////////////////////////////
 
+    @Override
     public final boolean contains(double x, double y)
     {
         return (this.path.contains(x, y));
     }
 
+    @Override
     public final boolean contains(double x, double y, double width, double height)
     {
         return (this.path.contains(x, y, width, height));
     }
 
+    @Override
     public final boolean contains(Point2D p)
     {
         return (this.path.contains(p));
     }
 
+    @Override
     public final boolean contains(Rectangle2D r)
     {
         return (this.path.contains(r));
     }
 
+    @Override
     public final Rectangle getBounds()
     {
         return (this.path.getBounds2D().getBounds());
     }
 
+    @Override
     public final Rectangle2D getBounds2D()
     {
         return (this.path.getBounds2D());
@@ -647,21 +649,25 @@ public class GrappaShape
         return this.path.getPathIterator(null);
     }
 
+    @Override
     public final PathIterator getPathIterator(AffineTransform at)
     {
         return this.path.getPathIterator(at);
     }
 
+    @Override
     public final PathIterator getPathIterator(AffineTransform at, double flatness)
     {
         return new FlatteningPathIterator(this.path.getPathIterator(at), flatness);
     }
 
+    @Override
     public final boolean intersects(double x, double y, double width, double height)
     {
         return (this.path.intersects(x, y, width, height));
     }
 
+    @Override
     public final boolean intersects(Rectangle2D r)
     {
         return (this.path.intersects(r));

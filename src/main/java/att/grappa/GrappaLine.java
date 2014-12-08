@@ -26,10 +26,7 @@ import java.awt.geom.Rectangle2D;
  * @author <a href="mailto:john@research.att.com">John Mocenigo</a>, <a href="http://www.research.att.com">Research @
  *         AT&T Labs</a>
  */
-public class GrappaLine
-    implements
-    GrappaConstants,
-    Cloneable, Shape
+public class GrappaLine implements GrappaConstants, Cloneable, Shape
 {
     /**
      * Arrow head length
@@ -530,31 +527,37 @@ public class GrappaLine
     //
     // //////////////////////////////////////////////////////////////////////
 
+    @Override
     public final boolean contains(double x, double y)
     {
         return (this.testpath.contains(x, y));
     }
 
+    @Override
     public final boolean contains(double x, double y, double width, double height)
     {
         return (this.testpath.contains(x, y, width, height));
     }
 
+    @Override
     public final boolean contains(Point2D p)
     {
         return (this.testpath.contains(p));
     }
 
+    @Override
     public final boolean contains(Rectangle2D r)
     {
         return (this.testpath.contains(r));
     }
 
+    @Override
     public final Rectangle getBounds()
     {
         return (this.path.getBounds2D().getBounds());
     }
 
+    @Override
     public final Rectangle2D getBounds2D()
     {
         return (this.path.getBounds2D());
@@ -570,21 +573,25 @@ public class GrappaLine
         return this.path.getPathIterator(null);
     }
 
+    @Override
     public final PathIterator getPathIterator(AffineTransform at)
     {
         return this.path.getPathIterator(at);
     }
 
+    @Override
     public final PathIterator getPathIterator(AffineTransform at, double flatness)
     {
         return new FlatteningPathIterator(this.path.getPathIterator(at), flatness);
     }
 
+    @Override
     public final boolean intersects(double x, double y, double width, double height)
     {
         return (this.testpath.intersects(x, y, width, height));
     }
 
+    @Override
     public final boolean intersects(Rectangle2D r)
     {
         return (this.testpath.intersects(r));

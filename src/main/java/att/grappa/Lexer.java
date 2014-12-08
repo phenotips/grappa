@@ -386,7 +386,7 @@ public class Lexer
         return new Symbol(Symbols.ATOM, result_str);
     }
 
-/**
+    /**
      * Swallow up an html-like string.  Html-like strings begin with a '<'
      * and include all characters up to the first matching occurrence of a '>'
      * The routine returns a Symbol object suitable for return by the scanner.
