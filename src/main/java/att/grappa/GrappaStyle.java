@@ -695,14 +695,9 @@ public class GrappaStyle implements GrappaConstants, Cloneable
         String tmpstr = null;
         Object[] args = { "%g", null };
 
-        if (showAll
-            ||
-            (
-            color != STYLE_LINE_COLOR_DEFAULT
-                &&
-                STYLE_LINE_COLOR_DEFAULT != null
-                &&
-            !STYLE_LINE_COLOR_DEFAULT.equals(color)
+        if (showAll || (
+            color != STYLE_LINE_COLOR_DEFAULT && STYLE_LINE_COLOR_DEFAULT != null && !STYLE_LINE_COLOR_DEFAULT
+            .equals(color)
             )) {
             styleStringBuilder = new StringBuilder();
             styleStringBuilder.append("lineColor(");
