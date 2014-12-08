@@ -294,6 +294,7 @@ public class Parser extends java_cup.runtime.lr_parser
 
     private Graph theGraph = null;
 
+    @SuppressWarnings("unused")
     private Reader inReader;
 
     private PrintWriter errWriter;
@@ -826,6 +827,7 @@ class CUP$Parser$actions
         for (int i = 1; i < this.edges.size(); i++) {
             headPair = this.edges.elementAt(i);
             if (((Boolean) (tailPair[1])).booleanValue()) { // true if node list
+                @SuppressWarnings("unchecked")
                 Vector<Object[]> list = (Vector<Object[]>) tailPair[0];
                 Object[] nodePair = null;
                 for (int j = 0; j < list.size(); j++) {
@@ -851,6 +853,7 @@ class CUP$Parser$actions
         String key = (keyAttr == null) ? null : keyAttr.getStringValue();
         String name = (nameAttr == null) ? null : nameAttr.getStringValue();
         if (((Boolean) (headPair[1])).booleanValue()) { // true if node list
+            @SuppressWarnings("unchecked")
             Vector<Object[]> list = (Vector<Object[]>) (headPair[0]);
             Object[] nodePair = null;
             for (int j = 0; j < list.size(); j++) {

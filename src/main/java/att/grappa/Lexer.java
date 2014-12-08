@@ -68,11 +68,13 @@ public class Lexer
     /**
      * Count of total errors detected so far.
      */
+    @SuppressWarnings("unused")
     private int error_count = 0;
 
     /**
      * Count of warnings issued so far
      */
+    @SuppressWarnings("unused")
     private int warning_count = 0;
 
     /**
