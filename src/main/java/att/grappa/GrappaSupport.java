@@ -745,9 +745,11 @@ public abstract class GrappaSupport implements GrappaConstants
             return false;
         }
         InputStream fromFilterRaw = null;
+        InputStream fromFilterError = null;
         try {
             if (connector instanceof java.lang.Process) {
                 fromFilterRaw = ((java.lang.Process) connector).getInputStream();
+                fromFilterError = ((java.lang.Process) connector).getErrorStream();
             } else if (connector instanceof java.net.URLConnection) {
                 fromFilterRaw = ((java.net.URLConnection) connector).getInputStream();
             } else {
@@ -757,6 +759,32 @@ public abstract class GrappaSupport implements GrappaConstants
             Grappa.displayException(ioex);
             return false;
         }
+
+        // Read stderr for any content.
+        if (fromFilterError != null) {
+            StringBuilder textBuilder = new StringBuilder();
+            try (BufferedReader fromFilter =
+                     new BufferedReader(
+                         new InputStreamReader(fromFilterError))) {
+                String line;
+                while ((line = fromFilter.readLine()) != null)
+                {
+                    textBuilder.append(line);
+                }
+            } catch (IOException ioex) {
+                Grappa.displayException(ioex);
+                return false;
+            }
+            String text = textBuilder.toString();
+            if (!text.isEmpty()) {
+                // Found text on stderr, fail the filter.
+                Grappa.displayException(
+                    new IllegalStateException(
+                        text), "Application return error text");
+                return false;
+            }
+        }
+
         BufferedReader fromFilter = new BufferedReader(new InputStreamReader(fromFilterRaw));
         StringBuilder newGraph = new StringBuilder(content.length() + 128);
         try {
