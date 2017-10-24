@@ -11,15 +11,7 @@
 package att.grappa;
 
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Vector;
+import java.util.*;
 
 import att.grappa.util.IteratorEnumeration;
 
@@ -2269,6 +2261,14 @@ public class Subgraph extends Element implements Comparator<Element>
         return new IteratorEnumeration<>(this.nodedict.values().iterator());
     }
 
+    public List<Node> nodeElementsCopy()
+    {
+        if (this.nodedict == null) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(this.nodedict.values());
+    }
+
     /**
      * Get an enumeration of the edge elements in this subgraph.
      *
@@ -2282,6 +2282,14 @@ public class Subgraph extends Element implements Comparator<Element>
         return new IteratorEnumeration<>(this.edgedict.values().iterator());
     }
 
+    public List<Edge> edgeElementsCopy()
+    {
+        if (this.edgedict == null) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(this.edgedict.values());
+    }
+
     /**
      * Get an enumeration of the subgraph elements in this subgraph.
      *
@@ -2293,6 +2301,13 @@ public class Subgraph extends Element implements Comparator<Element>
             return Collections.emptyEnumeration();
         }
         return new IteratorEnumeration<>(this.graphdict.values().iterator());
+    }
+    public List<Subgraph> subgraphElementsCopy()
+    {
+        if (this.graphdict == null) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(this.graphdict.values());
     }
 
     /**
