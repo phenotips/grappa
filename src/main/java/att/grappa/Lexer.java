@@ -389,6 +389,36 @@ public class Lexer
     }
 
     /**
+     * Swallow up a string. Strings is terminated with any non string
+     * character (e.g. coma, closing brackets).
+     * The routine returns a Symbol object suitable for return by the scanner.
+     */
+    private Symbol do_unquote_string() throws IOException
+    {
+        String result_str;
+
+        synchronized (this.cmnstrbuf) {
+            this.cmnstrbuf.delete(0, this.cmnstrbuf.length()); // faster than cmnstrbuf.setLength(0)!
+            // save chars until we see a double quote
+            while (id_char(this.next_char) || this.next_char == '.') {
+                // if we have run off the end issue a message and break out of loop
+                if (this.next_char == EOF_CHAR) {
+                    emit_error("Specification file ends inside a code string");
+                    break;
+                }
+                // otherwise record the char and move on
+                this.cmnstrbuf.append(new Character((char) this.next_char));
+                advance();
+            }
+
+            result_str = this.cmnstrbuf.toString();
+        }
+
+        this.haveId = true;
+        return new Symbol(Symbols.ATOM, result_str);
+    }
+
+    /**
      * Swallow up an html-like string.  Html-like strings begin with a '<'
      * and include all characters up to the first matching occurrence of a '>'
      * The routine returns a Symbol object suitable for return by the scanner.
@@ -520,6 +550,11 @@ public class Lexer
             // look for quoted string
             if (this.next_char == '"') {
                 return do_quote_string();
+            }
+
+            // equals may not followed by a quoted text -- let's read this word
+            if (this.old_char == '=') {
+                return do_unquote_string();
             }
 
             // look for html-like string
