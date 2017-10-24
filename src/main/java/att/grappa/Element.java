@@ -994,8 +994,6 @@ public abstract class Element implements GrappaConstants
         StringBuilder strbuf = new StringBuilder(len + 8);
         char[] array = input.toCharArray();
         boolean has_special = false;
-        boolean isHTML = false;
-        String tmpstr;
 
         for (int isub = 0; isub < array.length; isub++) {
             if (array[isub] == '"') {
@@ -1008,11 +1006,6 @@ public abstract class Element implements GrappaConstants
             }
             strbuf.append(array[isub]);
         }
-        // Based ona suggestion by Martin Bierkoch to
-        // keep Grappa from corrupting HTML-like graphviz labels
-        if ((tmpstr = strbuf.toString().trim()).startsWith("<") && tmpstr.endsWith(">")) {
-            isHTML = true;
-        }
 
         // annoying, but necessary kludge to make libgraph parser happy
         if (!has_special && len <= 8) {
@@ -1022,7 +1015,7 @@ public abstract class Element implements GrappaConstants
                 has_special = true;
             }
         }
-        if (has_special && (!isHTML)) {
+        if (has_special) {
             strbuf.append('"');
             strbuf.insert(0, '"');
         }
