@@ -57,7 +57,7 @@ public class AwtExceptionDisplay
      * Pops up the frame and displays information on the supplied exception. Initially, a text area displays the message
      * associated with the exception. By pressing a button, an end-user can view a stack trace as well.
      *
-     * @param ex the exception about which informtaion is to be displayed.
+     * @param ex the exception about which information is to be displayed.
      */
     public void displayException(Exception ex)
     {
@@ -69,7 +69,7 @@ public class AwtExceptionDisplay
      * supplied string followed on the next line by the message associated with the exception. By pressing a button, an
      * end-user can view a stack trace as well.
      *
-     * @param ex the exception about which informtaion is to be displayed.
+     * @param ex the exception about which information is to be displayed.
      */
     public void displayException(Exception ex, String msg)
     {

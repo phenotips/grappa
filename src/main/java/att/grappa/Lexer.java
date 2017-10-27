@@ -389,8 +389,9 @@ public class Lexer
     }
 
     /**
-     * Swallow up a string. Strings is terminated with any non string
-     * character (e.g. coma, closing brackets).
+     * Swallow up a simple string value. Simple values are not tends to be
+     * enclosed in quotes. We assume, that a word consists of "id_chars"
+     * and dots.
      * The routine returns a Symbol object suitable for return by the scanner.
      */
     private Symbol do_unquote_string() throws IOException
@@ -552,7 +553,10 @@ public class Lexer
                 return do_quote_string();
             }
 
-            // equals may not followed by a quoted text -- let's read this word
+            // Auoted values are processed with the section above.
+            // But at attribute value definitions, equals may not followed
+            // by a quoted text. So we have to read the value after the
+            // '=' sign.
             if (this.old_char == '=') {
                 return do_unquote_string();
             }
