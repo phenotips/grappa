@@ -110,8 +110,14 @@ public abstract class Grappa implements GrappaConstants
     /*
      * A instance of ExceptionDisplay used with the (public) convenience methods that follow.
      */
-    private static final ExceptionDisplay exceptionDisplay = new ExceptionDisplay(Grappa.PKG_UPLOW
+    private static ExceptionDisplay exceptionDisplay = new AwtExceptionDisplay(Grappa.PKG_UPLOW
         + ":  Exception Detected");
+
+    public static void setExceptionDisplay(
+        ExceptionDisplay exceptionDisplay)
+    {
+        Grappa.exceptionDisplay = exceptionDisplay;
+    }
 
     /**
      * Boolean for enabling/disabling exception pop-up window display.

@@ -1150,14 +1150,14 @@ public abstract class Element implements GrappaConstants
                 getSubgraph().removeEdge(name);
                 break;
             case GrappaConstants.SUBGRAPH:
-                for (Enumeration<Node> nodes = ((Subgraph) this).nodeElements(); nodes.hasMoreElements();) {
-                    nodes.nextElement().delete();
+                for (Node node : ((Subgraph) this).nodeElementsCopy()) {
+                    node.delete();
                 }
-                for (Enumeration<Edge> edges = ((Subgraph) this).edgeElements(); edges.hasMoreElements();) {
-                    edges.nextElement().delete();
+                for (Edge edge : ((Subgraph) this).edgeElementsCopy()) {
+                    edge.delete();
                 }
-                for (Enumeration<Subgraph> sgs = ((Subgraph) this).subgraphElements(); sgs.hasMoreElements();) {
-                    sgs.nextElement().delete();
+                for (Subgraph subgraph : ((Subgraph) this).subgraphElementsCopy()) {
+                    subgraph.delete();
                 }
                 if (getSubgraph() != null) {
                     getSubgraph().removeSubgraph(name);
