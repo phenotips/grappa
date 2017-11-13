@@ -389,10 +389,8 @@ public class Lexer
     }
 
     /**
-     * Swallow up a simple string value. Simple values are not tends to be
-     * enclosed in quotes. We assume, that a word consists of "id_chars"
-     * and dots.
-     * The routine returns a Symbol object suitable for return by the scanner.
+     * Swallow up a simple string value. Simple values are not usually enclosed in quotes. We assume that such a value
+     * consists of "id_chars" and dots. The routine returns a Symbol object suitable for return by the scanner.
      */
     private Symbol do_unquote_string() throws IOException
     {
@@ -400,7 +398,7 @@ public class Lexer
 
         synchronized (this.cmnstrbuf) {
             this.cmnstrbuf.delete(0, this.cmnstrbuf.length()); // faster than cmnstrbuf.setLength(0)!
-            // save chars until we see a double quote
+            // save chars until we reach the end of the value
             while (id_char(this.next_char) || this.next_char == '.') {
                 // if we have run off the end issue a message and break out of loop
                 if (this.next_char == EOF_CHAR) {
@@ -553,10 +551,11 @@ public class Lexer
                 return do_quote_string();
             }
 
-            // Auoted values are processed with the section above.
-            // But at attribute value definitions, equals may not followed
-            // by a quoted text. So we have to read the value after the
-            // '=' sign.
+            // Quoted values are processed with the section above.
+            // But for attribute value definitions,
+            // equals may not be followed by a quoted text,
+            // but by a simple unquoted value.
+            // So we have to read the value after the '=' sign.
             if (this.old_char == '=') {
                 return do_unquote_string();
             }

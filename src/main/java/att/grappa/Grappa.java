@@ -113,8 +113,13 @@ public abstract class Grappa implements GrappaConstants
     private static ExceptionDisplay exceptionDisplay = new AwtExceptionDisplay(Grappa.PKG_UPLOW
         + ":  Exception Detected");
 
-    public static void setExceptionDisplay(
-        ExceptionDisplay exceptionDisplay)
+    /**
+     * Replaces the exception displayer to be used from now on with a specific instance. By default, a graphical AWT
+     * window is used.
+     *
+     * @param exceptionDisplay the displayer to use
+     */
+    public static void setExceptionDisplay(ExceptionDisplay exceptionDisplay)
     {
         Grappa.exceptionDisplay = exceptionDisplay;
     }
