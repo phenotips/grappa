@@ -12,7 +12,7 @@ package att.grappa;
 /**
  * Implement this interface to register your special exception-displaying solution.
  *
- * @see Grappa#setExceptionDisplay(ExceptionDisplay)xceptionDisplay
+ * @see Grappa#setExceptionDisplay(ExceptionDisplay)
  */
 public interface ExceptionDisplay
 {

@@ -279,7 +279,7 @@ public class Lexer
     public static boolean id_char(char ch)
     {
         return ((Character.isJavaIdentifierStart(ch) && Character.getType(ch) != Character.CURRENCY_SYMBOL) || Character
-            .isDigit(ch));
+            .isDigit(ch) || ch == '.');
     }
 
     /**
@@ -384,35 +384,6 @@ public class Lexer
 
         // advance past the closing double quote and build a return Symbol
         advance();
-        this.haveId = true;
-        return new Symbol(Symbols.ATOM, result_str);
-    }
-
-    /**
-     * Swallow up a simple string value. Simple values are not usually enclosed in quotes. We assume that such a value
-     * consists of "id_chars" and dots. The routine returns a Symbol object suitable for return by the scanner.
-     */
-    private Symbol do_unquote_string() throws IOException
-    {
-        String result_str;
-
-        synchronized (this.cmnstrbuf) {
-            this.cmnstrbuf.delete(0, this.cmnstrbuf.length()); // faster than cmnstrbuf.setLength(0)!
-            // save chars until we reach the end of the value
-            while (id_char(this.next_char) || this.next_char == '.') {
-                // if we have run off the end issue a message and break out of loop
-                if (this.next_char == EOF_CHAR) {
-                    emit_error("Specification file ends inside a code string");
-                    break;
-                }
-                // otherwise record the char and move on
-                this.cmnstrbuf.append(new Character((char) this.next_char));
-                advance();
-            }
-
-            result_str = this.cmnstrbuf.toString();
-        }
-
         this.haveId = true;
         return new Symbol(Symbols.ATOM, result_str);
     }
@@ -549,15 +520,6 @@ public class Lexer
             // look for quoted string
             if (this.next_char == '"') {
                 return do_quote_string();
-            }
-
-            // Quoted values are processed with the section above.
-            // But for attribute value definitions,
-            // equals may not be followed by a quoted text,
-            // but by a simple unquoted value.
-            // So we have to read the value after the '=' sign.
-            if (this.old_char == '=') {
-                return do_unquote_string();
             }
 
             // look for html-like string
