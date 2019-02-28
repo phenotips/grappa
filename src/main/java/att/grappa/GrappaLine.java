@@ -325,8 +325,13 @@ public class GrappaLine implements GrappaConstants, Cloneable, Shape
                     type += HEAD_ARROW_EDGE;
                     break;
                 case 'e':
+                	// e can be used in scientific notation like 1.34e87
+                	// Make sure to only treat e as a tail arrow edge when it
+                	// is preceded by space.
+                	if (wasSpace) {
+                		type += TAIL_ARROW_EDGE;
+                	}
                     wasSpace = false;
-                    type += TAIL_ARROW_EDGE;
                     break;
                 case ' ':
                     if (!wasSpace) {
