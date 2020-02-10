@@ -80,18 +80,18 @@ public class Lexer
     /**
      * hash tables to hold symbols
      */
-    private Hashtable<String, Integer> keywords = new Hashtable<>(32);
+    private final Hashtable<String, Integer> keywords = new Hashtable<>(32);
 
-    private Hashtable<Integer, Integer> char_symbols = new Hashtable<>(32);
+    private final Hashtable<Integer, Integer> char_symbols = new Hashtable<>(32);
 
-    private Reader inReader;
+    private final Reader inReader;
 
     private PrintWriter errWriter = null;
 
     /**
      * common StringBuilder (suggested by Ginny Travers (bbn.com))
      */
-    private StringBuilder cmnstrbuf = new StringBuilder();
+    private final StringBuilder cmnstrbuf = new StringBuilder();
 
     /**
      * Create an instance of <code>Lexer</code> that reads from <code>input</code> and sends error messages to
@@ -101,7 +101,7 @@ public class Lexer
      * @param error error output <code>Writer</code> object
      * @exception IllegalArgumentException whenever <code>input</code> is null
      */
-    public Lexer(Reader input, PrintWriter error) throws IllegalArgumentException
+    public Lexer(final Reader input, final PrintWriter error) throws IllegalArgumentException
     {
         super();
         if (input == null) {
@@ -156,7 +156,7 @@ public class Lexer
     {
         if (this.retreated) {
             this.retreated = false;
-            int tmp_char = this.old_char;
+            final int tmp_char = this.old_char;
             this.old_char = this.next_char;
             this.next_char = this.next_char2;
             this.next_char2 = tmp_char;
@@ -215,7 +215,7 @@ public class Lexer
         } else {
             this.current_position--;
         }
-        int tmp_char = this.next_char2;
+        final int tmp_char = this.next_char2;
         this.next_char2 = this.next_char;
         this.next_char = this.old_char;
         this.old_char = tmp_char;
@@ -227,9 +227,9 @@ public class Lexer
      *
      * @param message the message to print.
      */
-    private void emit_error(String message)
+    private void emit_error(final String message)
     {
-        String output = "Lexer" + getLocation() + ": " + message;
+        final String output = "Lexer" + getLocation() + ": " + message;
         if (this.errWriter != null) {
             this.errWriter.println("ERROR: " + output);
         }
@@ -253,7 +253,7 @@ public class Lexer
      *
      * @param message the message to print.
      */
-    private void emit_warn(String message)
+    private void emit_warn(final String message)
     {
         if (this.errWriter != null) {
             this.errWriter.println("WARNING: Lexer" + getLocation() + ": " + message);
@@ -266,7 +266,7 @@ public class Lexer
      *
      * @param ch the character in question.
      */
-    public static boolean id_char(int ch)
+    public static boolean id_char(final int ch)
     {
         return (Lexer.id_char((char) ch));
     }
@@ -276,10 +276,18 @@ public class Lexer
      *
      * @param ch the character in question.
      */
-    public static boolean id_char(char ch)
+    public static boolean id_char(final char ch)
     {
         return ((Character.isJavaIdentifierStart(ch) && Character.getType(ch) != Character.CURRENCY_SYMBOL) || Character
             .isDigit(ch) || ch == '.');
+    }
+
+    public static boolean numeral_char(final int ch) {
+      return (Lexer.numeral_char((char) ch));
+    }
+
+    public static boolean numeral_char(final char ch) {
+      return Character.isDigit(ch);
     }
 
     /**
@@ -287,7 +295,7 @@ public class Lexer
      *
      * @param ch the character in question.
      */
-    private int find_single_char(int ch)
+    private int find_single_char(final int ch)
     {
         Integer result;
 
@@ -435,7 +443,7 @@ public class Lexer
     {
         String result_str;
         Integer keyword_num;
-        char buffer[] = new char[1];
+        final char buffer[] = new char[1];
 
         // next_char holds first character of id
         buffer[0] = (char) this.next_char;
@@ -451,6 +459,117 @@ public class Lexer
                 this.cmnstrbuf.append(buffer, 0, 1);
                 advance();
             }
+            // extract a string and try to look it up as a keyword
+            result_str = this.cmnstrbuf.toString();
+        }
+
+        keyword_num = this.keywords.get(result_str);
+
+        // if we found something, return that keyword
+        if (keyword_num != null) {
+            this.haveId = false;
+            return new Symbol(keyword_num.intValue());
+        }
+
+        // otherwise build and return an id Symbol with an attached string
+        this.haveId = true;
+        return new Symbol(Symbols.ATOM, result_str);
+    }
+
+    /**
+     * Add a number of consecutive digits to the buffer.
+     */
+    private void do_digits() throws IOException
+    {
+
+        final char buffer[] = new char[1];
+
+        while (numeral_char(this.next_char)) {
+            buffer[0] = (char) this.next_char;
+            this.cmnstrbuf.append(buffer, 0, 1);
+            advance();
+        }
+    }
+
+    /**
+     * Add the fractional part of a numeral to the buffer.
+     */
+    private void do_fractional() throws IOException
+    {
+        do_digits();
+    }
+
+    /**
+     * Add the integer and fractional part of a numeral to the buffer.
+     */
+    private void do_integer() throws IOException
+    {
+
+        // Current char is a digit, consume it and consecutive digits.
+        do_digits();
+
+        final char buffer[] = new char[1];
+
+        if (this.next_char == '.') {
+            // There is a fractional part. Add the decimal point to the buffer.
+            buffer[0] = (char) this.next_char;
+            this.cmnstrbuf.append(buffer, 0, 1);
+            advance();
+            // Add the fractional part to the buffer.
+            do_fractional();
+        }
+    }
+
+    /**
+     * Add a negative numeral to the buffer.
+     */
+    private void do_negative() throws IOException
+    {
+
+        final char buffer[] = new char[1];
+
+        if (this.next_char == '.') {
+            // This is a negative numeral without an integer part.
+            // Add the decimal point to the buffer.
+            buffer[0] = (char) this.next_char;
+            this.cmnstrbuf.append(buffer, 0, 1);
+            advance();
+            // Add the fractional part to the buffer.
+            do_fractional();
+        } else {
+            // This negative numeral have an integer part; add it to the buffer.
+            do_integer();
+        }
+
+    }
+
+    /**
+     * Process a numeral. [-]?(.[0-9]+ | [0-9]+(.[0-9]*)? )
+     */
+    private Symbol do_numeral() throws IOException
+    {
+        String result_str;
+        Integer keyword_num;
+        final char buffer[] = new char[1];
+
+        // next_char holds first character of id
+        buffer[0] = (char) this.next_char;
+
+        synchronized (this.cmnstrbuf) {
+            this.cmnstrbuf.delete(0, this.cmnstrbuf.length()); // faster than cmnstrbuf.setLength(0)!
+            this.cmnstrbuf.append(buffer, 0, 1);
+
+            if (this.next_char == '-') {
+                advance();
+                do_negative();
+            } else if (this.next_char == '.') {
+                advance();
+                do_fractional();
+            } else {
+                advance();
+                do_integer();
+            }
+
             // extract a string and try to look it up as a keyword
             result_str = this.cmnstrbuf.toString();
         }
@@ -505,7 +624,7 @@ public class Lexer
             sym_num = find_single_char(this.next_char);
             if (sym_num != -1) {
                 if (sym_num == Symbols.LCUR && !this.haveId) {
-                    Symbol result = new Symbol(Symbols.SUBGRAPH);
+                    final Symbol result = new Symbol(Symbols.SUBGRAPH);
                     this.haveId = true;
                     retreat();
                     return result;
@@ -539,6 +658,11 @@ public class Lexer
                 return do_id();
             }
 
+            // look for a numeral
+            if (numeral_char(this.next_char) || this.next_char == '-' || this.next_char == '.') {
+                return do_numeral();
+            }
+
             // look for EOF
             if (this.next_char == EOF_CHAR) {
                 this.haveId = false;
@@ -561,10 +685,10 @@ public class Lexer
      *
      * @exception IOException if <code>advance()</code> does
      */
-    public Symbol next_token(int debugLevel) throws IOException
+    public Symbol next_token(final int debugLevel) throws IOException
     {
         if (debugLevel > 0) {
-            Symbol result = real_next_token();
+            final Symbol result = real_next_token();
             if (this.errWriter != null && debugLevel >= 5) {
                 this.errWriter.println("DEBUG: Lexer: next_token() => " + result.sym);
             }
